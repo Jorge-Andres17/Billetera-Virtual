@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="568.0" prefWidth="799.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController.BilleteraVirtualViewAdmin">
+   <children>
+      <TabPane layoutX="7.0" layoutY="7.0" prefHeight="555.0" prefWidth="780.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Gestion de Usuarios">
+              <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="456.0" prefWidth="764.0">
+                      <children>
+                          <SplitPane layoutX="4.0" layoutY="10.0" orientation="VERTICAL" prefHeight="510.0" prefWidth="771.0">
+                              <items>
+                                  <fx:include source="CrudUsuario.fxml" />
+                              </items>
+                          </SplitPane>
+                      </children>
+                  </AnchorPane>
+              </content>
+          </Tab>
+          <Tab text="Gestion de Transacciones">
+              <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                      <children>
+                          <SplitPane layoutX="3.0" layoutY="3.0" orientation="VERTICAL" prefHeight="519.0" prefWidth="773.0">
+                              <items>
+                                  <fx:include source="Transaccion.fxml" />
+                              </items>
+                          </SplitPane>
+                      </children>
+                  </AnchorPane>
+              </content>
+          </Tab>
+            <Tab text="Gestion de Cuentas">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <children>
+                            <SplitPane layoutX="2.0" layoutY="10.0" orientation="VERTICAL" prefHeight="517.0" prefWidth="787.0">
+                                <items>
+                                    <fx:include source="CrudCuenta.fxml" />
+                                </items>
+                            </SplitPane>
+                        </children>
+                    </AnchorPane>
+                </content>
+            </Tab>
+            <Tab text="Estadisticas">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <children>
+                            <SplitPane layoutX="18.0" layoutY="10.0" orientation="VERTICAL" prefHeight="450.0" prefWidth="628.0">
+                                <items>
+                                    <fx:include source="Login.fxml" />
+                                </items>
+                            </SplitPane>
+                        </children>
+                    </AnchorPane>
+                </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>
