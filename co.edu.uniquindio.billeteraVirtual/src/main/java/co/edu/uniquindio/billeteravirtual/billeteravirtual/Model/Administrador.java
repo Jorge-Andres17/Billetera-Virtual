@@ -6,6 +6,8 @@ public class Administrador {
     private String correo;
     private String clave;
 
+    BilleteraVirtual ownedByBilleteraVirtual;
+
     public Administrador() {}
 
     public Administrador(int idAdministrador, String nombre, String correo, String clave) {
@@ -45,5 +47,13 @@ public class Administrador {
 
     public void setClave(String clave) {
         this.clave = clave;
+    }
+
+    public BilleteraVirtual getOwnedByBilleteraVirtual() {
+        return ownedByBilleteraVirtual;
+    }
+
+    public void setOwnedByBilleteraVirtual(BilleteraVirtual ownedByBilleteraVirtual) {
+        this.ownedByBilleteraVirtual = ownedByBilleteraVirtual;
     }
 }

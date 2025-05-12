@@ -12,6 +12,7 @@ public class Usuario {
     private String clave;
 
     private List<Cuenta> listaCuentasAsociadas = new ArrayList<Cuenta>();
+    BilleteraVirtual owedBilleteraVirtual;
 
     public Usuario(){}
 
@@ -83,5 +84,13 @@ public class Usuario {
 
     public void setListaCuentasAsociadas(List<Cuenta> listaCuentasAsociadas) {
         this.listaCuentasAsociadas = listaCuentasAsociadas;
+    }
+
+    public BilleteraVirtual getOwedBilleteraVirtual() {
+        return owedBilleteraVirtual;
+    }
+
+    public void setOwedBilleteraVirtual(BilleteraVirtual owedBilleteraVirtual) {
+        this.owedBilleteraVirtual = owedBilleteraVirtual;
     }
 }

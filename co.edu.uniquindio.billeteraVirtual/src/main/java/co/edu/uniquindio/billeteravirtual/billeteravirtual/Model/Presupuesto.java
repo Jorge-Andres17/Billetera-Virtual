@@ -1,33 +1,31 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Model;
 
 public class Presupuesto {
-    private int idPresupuesto;
+    private static int contadorId = 0;
+    private final int idPresupuesto;
     private String nombrePresupuesto;
     private double MontoAsignado;
     private double MontoGastado;
 
     private Cuenta cuentaAsociada;
+    private Categoria categoriaAsociada;
+    BilleteraVirtual ownedByBilleteraVirtual;
 
-    public Presupuesto(){}
-
-    public Presupuesto(int idPresupuesto,
-                       String nombrePresupuesto,
+    public Presupuesto(String nombrePresupuesto,
                        double MontoAsignado,
                        double MontoGastado,
-                       Cuenta cuentaAsociada) {
-        this.idPresupuesto = idPresupuesto;
+                       Cuenta cuentaAsociada,
+                       Categoria categoriaAsociada) {
+        this.idPresupuesto = ++contadorId;
         this.nombrePresupuesto = nombrePresupuesto;
         this.MontoAsignado = MontoAsignado;
         this.MontoGastado = MontoGastado;
         this.cuentaAsociada = cuentaAsociada;
+        this.categoriaAsociada = categoriaAsociada;
     }
 
     public int getIdPresupuesto() {
         return idPresupuesto;
-    }
-
-    public void setIdPresupuesto(int idPresupuesto) {
-        this.idPresupuesto = idPresupuesto;
     }
 
     public String getNombrePresupuesto() {
@@ -60,5 +58,21 @@ public class Presupuesto {
 
     public void setCuentaAsociada(Cuenta cuentaAsociada) {
         this.cuentaAsociada = cuentaAsociada;
+    }
+
+    public Categoria getCategoriaAsociada() {
+        return categoriaAsociada;
+    }
+
+    public void setCategoriaAsociada(Categoria categoriaAsociada) {
+        this.categoriaAsociada = categoriaAsociada;
+    }
+
+    public BilleteraVirtual getOwnedByBilleteraVirtual() {
+        return ownedByBilleteraVirtual;
+    }
+
+    public void setOwnedByBilleteraVirtual(BilleteraVirtual ownedByBilleteraVirtual) {
+        this.ownedByBilleteraVirtual = ownedByBilleteraVirtual;
     }
 }

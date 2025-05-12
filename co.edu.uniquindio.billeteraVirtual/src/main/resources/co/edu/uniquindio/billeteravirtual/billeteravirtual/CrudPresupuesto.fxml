@@ -1,14 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="co.edu.uniquindio.billeteravirtual.billeteravirtual.CrudPresupuesto"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="503.0" prefWidth="772.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController.CrudPresupuestoViewController">
+   <children>
+      <SplitPane dividerPositions="0.47413793103448276" layoutX="6.0" layoutY="8.0" orientation="VERTICAL" prefHeight="487.0" prefWidth="761.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <Label layoutX="253.0" layoutY="14.0" text="Registro de Presupuestos">
+                     <font>
+                        <Font name="System Bold" size="25.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtNombrePresupuesto" layoutX="183.0" layoutY="78.0" prefHeight="25.0" prefWidth="175.0" />
+                  <TextField fx:id="txtMontoAsignado" layoutX="183.0" layoutY="116.0" prefHeight="25.0" prefWidth="175.0" />
+                  <Label layoutX="120.0" layoutY="80.0" text="Nombre:">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font></Label>
+                  <Label layoutX="59.0" layoutY="118.0" text="Monto Asignado:">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font></Label>
+                  <ComboBox fx:id="cbCuentasDisponibles" layoutX="540.0" layoutY="78.0" prefHeight="25.0" prefWidth="157.0" />
+                  <ComboBox fx:id="cbCategorias" layoutX="540.0" layoutY="116.0" prefHeight="25.0" prefWidth="157.0" />
+                  <Label layoutX="381.0" layoutY="80.0" text="Cuentas Disponibles:">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font></Label>
+                  <Label layoutX="440.0" layoutY="118.0" text="Categorias:">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font></Label>
+                  <Button fx:id="btnNuevo" layoutX="243.0" layoutY="170.0" mnemonicParsing="false" onAction="#onNuevo" text="Nuevo">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnAgregarPresupuesto" layoutX="345.0" layoutY="170.0" mnemonicParsing="false" onAction="#onAgregar" text="Agregar">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnActualizar" layoutX="455.0" layoutY="170.0" mnemonicParsing="false" onAction="#onActualizar" text="Actualizar">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <TableView fx:id="tablePresupuesto" layoutX="14.0" layoutY="16.0" prefHeight="174.0" prefWidth="736.0">
+                    <columns>
+                      <TableColumn fx:id="tcIdPresupuesto" prefWidth="95.0" text="ID Presupuesto" />
+                      <TableColumn fx:id="tcNombre" prefWidth="118.0" text="Nombre" />
+                        <TableColumn fx:id="tcCuenta" prefWidth="138.0" text="Cuenta" />
+                        <TableColumn fx:id="tcCategoria" prefWidth="125.0" text="Categoria" />
+                        <TableColumn fx:id="tcMontoAsignado" prefWidth="129.0" text="Monto Asignado" />
+                        <TableColumn fx:id="tcMontoGastado" prefWidth="130.0" text="Monto Gastado" />
+                    </columns>
+                  </TableView>
+                  <Button fx:id="btnEliminar" layoutX="343.0" layoutY="207.0" mnemonicParsing="false" onAction="#onEliminar" text="Eliminar">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
 </AnchorPane>

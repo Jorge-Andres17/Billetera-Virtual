@@ -13,6 +13,8 @@ import javafx.scene.control.*;
 
 import java.util.Optional;
 
+import static co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.BilleteraVirtualConstantes.*;
+
 public class CrudCuentaViewController {
     CrudCuentaController cuentaController;
     ObservableList<Cuenta> listaCuentas = FXCollections.observableArrayList();
@@ -76,13 +78,6 @@ public class CrudCuentaViewController {
         listenerSelection();
     }
 
-    private void listenerSelection() {
-        tableCuenta.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            selectedCuenta = newSelection;
-            mostrarInformacionUsuario(selectedCuenta);
-        });
-    }
-
     private void initDataBinding() {
         tcIdCuenta.setCellValueFactory
                 (cellData -> new SimpleStringProperty
@@ -98,6 +93,17 @@ public class CrudCuentaViewController {
                         (cellData.getValue().getTipoCuenta().toString()));
     }
 
+    private void obtenerCuentas() {
+        listaCuentas.addAll(cuentaController.obtenerCuentas());
+    }
+
+    private void listenerSelection() {
+        tableCuenta.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            selectedCuenta = newSelection;
+            mostrarInformacionUsuario(selectedCuenta);
+        });
+    }
+
     private void mostrarInformacionUsuario(Cuenta cuenta) {
         if(cuenta != null){
             txtNombreBanco.setText(cuenta.getNombreBanco());
@@ -106,18 +112,31 @@ public class CrudCuentaViewController {
         }
     }
 
-    private void obtenerCuentas() {
-        listaCuentas.addAll(cuentaController.obtenerCuentas());
-    }
-
     @FXML
-    void onActualizar(ActionEvent event) {
-
+    void onNuevo(ActionEvent event) {
+        nueva();
     }
 
     @FXML
     void onAgregar(ActionEvent event) {
         agregarCuenta();
+    }
+
+    @FXML
+    void onEliminar(ActionEvent event) {
+        eliminarCuenta();
+    }
+
+    @FXML
+    void onActualizar(ActionEvent event) {
+        actualizarCuenta();
+    }
+
+    private void nueva() {
+        txtNombreBanco.setText("");
+        txtNumeroCuenta.setText("");
+        cbTipoCuenta.setValue(null);
+        tableCuenta.getSelectionModel().clearSelection();
     }
 
     private void agregarCuenta() {
@@ -126,28 +145,23 @@ public class CrudCuentaViewController {
             if(cuentaController.agregarCuenta(cuenta)){
                 listaCuentas.add(cuenta);
                 limpiarCampos();
-                mostrarMensaje("",
-                        "HEADER_INCOMPLETO",
-                        "CONTENIDO_USUARIO_AGREGADO",
+                tableCuenta.getSelectionModel().clearSelection();
+                mostrarMensaje(TITULO_CUENTA_AGREGADA,
+                        HEADER_CUENTA_AGREGADA,
+                        BODY_CUENTA_AGREGADA,
                         Alert.AlertType.INFORMATION);
             }else {
-                mostrarMensaje("TITULO_USUARIO_NO_AGREGADO",
-                        "HEADER_INCOMPLETO",
-                        "CONTENIDO_USUARIO_NO_AGREGADO",
+                mostrarMensaje(TITULO_CUENTA_NO_AGREGADA,
+                        HEADER_CUENTA_NO_AGREGADA,
+                        BODY_CUENTA_NO_AGREGADA,
                         Alert.AlertType.ERROR);
             }
         }else {
-            mostrarMensaje("TITULO_INCOMPLETO",
-                    "HEADER_INCOMPLETO",
-                    "CONTENIDO_INCOMPLETO",
+            mostrarMensaje(TITULO_INCOMPLETO,
+                    HEADER_INCOMPLETO,
+                    BODY_INCOMPLETO,
                     Alert.AlertType.WARNING);
         }
-    }
-
-    private void limpiarCampos() {
-        txtNumeroCuenta.clear();
-        txtNombreBanco.clear();
-        cbTipoCuenta.setValue(null);
     }
 
     private boolean datosValidos(Cuenta cuenta) {
@@ -167,29 +181,65 @@ public class CrudCuentaViewController {
                 Sesion.getUsuarioActual());
     }
 
-    @FXML
-    void onEliminar(ActionEvent event) {
-        eliminarCuenta();
-    }
-
     private void eliminarCuenta() {
         Cuenta cuentaSeleccionada = tableCuenta.getSelectionModel().getSelectedItem();
         if (cuentaSeleccionada != null) {
-            if (cuentaController.eliminarCuenta(cuentaSeleccionada.getIdCuenta())) {
-                listaCuentas.remove(cuentaSeleccionada);
-                limpiarCampos();
-            } else {
-                System.out.println("No se pudo eliminar la cuenta con ID " );
+            if(mostrarMensajeConfirmacion(MENSAJE_ELIMINAR_CUENTA)) {
+                if (cuentaController.eliminarCuenta(cuentaSeleccionada.getIdCuenta())) {
+                    listaCuentas.remove(cuentaSeleccionada);
+                    limpiarCampos();
+                    mostrarMensaje(TITULO_CUENTA_ELIMINADA,
+                            HEADER_CUENTA_ELIMINADA,
+                            BODY_CUENTA_ELIMINADA,
+                            Alert.AlertType.INFORMATION);
+                } else {
+                    mostrarMensaje(TITULO_CUENTA_NO_ELIMINADA,
+                            HEADER_CUENTA_NO_ELIMINADA,
+                            BODY_CUENTA_NO_ELIMINADA,
+                            Alert.AlertType.ERROR);
+                }
             }
         } else {
-            System.out.println("No se ha seleccionado ninguna cuenta para eliminar.");
+            mostrarMensaje(TITULO_INCOMPLETO,
+                    HEADER_INCOMPLETO,
+                    BODY_INCOMPLETO,
+                    Alert.AlertType.WARNING);
         }
     }
 
-    @FXML
-    void onNuevo(ActionEvent event) {
-
+    private void actualizarCuenta() {
+        Cuenta cuentaSeleccionada = tableCuenta.getSelectionModel().getSelectedItem();
+        if(cuentaSeleccionada != null && datosValidos(cuentaSeleccionada)){
+            if (cuentaController.actualizarCuenta(cuentaSeleccionada.getIdCuenta(),
+                    txtNombreBanco.getText(),txtNumeroCuenta.getText(),
+                    cbTipoCuenta.getSelectionModel().getSelectedItem())){
+                tableCuenta.refresh();
+                limpiarCampos();
+                mostrarMensaje(TITULO_CUENTA_ACTUALIZADA,
+                        HEADER_CUENTA_ACTUALIZADA,
+                        BODY_CUENTA_ACTUALIZADA,
+                        Alert.AlertType.INFORMATION);
+            }else {
+                mostrarMensaje(TITULO_CUENTA_NO_ACTUALIZADA,
+                        HEADER_CUENTA_NO_ACTUALIZADA,
+                        BODY_CUENTA_NO_ACTUALIZADA,
+                        Alert.AlertType.ERROR);
+            }
+        }else {
+            mostrarMensaje(TITULO_INCOMPLETO,
+                    HEADER_INCOMPLETO,
+                    BODY_INCOMPLETO,
+                    Alert.AlertType.WARNING);
+        }
     }
+
+    private void limpiarCampos() {
+        txtNumeroCuenta.clear();
+        txtNombreBanco.clear();
+        cbTipoCuenta.setValue(null);
+        tableCuenta.getSelectionModel().clearSelection();
+    }
+
     private void mostrarMensaje(String titulo,
                                 String header,
                                 String contenido,

@@ -1,5 +1,7 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Model;
 
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Login.Sesion;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Enums.TipoCuenta;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Service.IBilleteraVirtualServices;
 
 import java.util.ArrayList;
@@ -121,8 +123,30 @@ public class BilleteraVirtual implements IBilleteraVirtualServices {
     }
 
     @Override
-    public boolean actualizarCategoria(String nombre, String numeroIdentificacionActual, String numeroIdentificacion, String email, String numeroCelular) {
-        return false;
+    public boolean actualizarCategoria(int id, String nombre,
+                                       String descripcion) {
+        Categoria categoria = obtenerCategoria(id);
+        if (categoria != null) {
+            categoria.setNombre(nombre);
+            categoria.setDescripcion(descripcion);
+
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+    public Categoria actualizarCategoriaDto(int id, String nombre,
+                                       String descripcion) {
+        Categoria categoria = obtenerCategoria(id);
+        if (categoria != null) {
+            categoria.setNombre(nombre);
+            categoria.setDescripcion(descripcion);
+
+        }
+
+        return categoria;
     }
 
     @Override
@@ -130,6 +154,8 @@ public class BilleteraVirtual implements IBilleteraVirtualServices {
         Cuenta cuenta1 = obtenerCuenta(cuenta.getIdCuenta());
         if (cuenta1 == null) {
             listaCuentas.add(cuenta);
+            cuenta.getUsuarioAsociado().getListaCuentasAsociadas().add(cuenta);
+
             return true;
         }else {
             return false;
@@ -153,6 +179,7 @@ public class BilleteraVirtual implements IBilleteraVirtualServices {
         Cuenta cuenta = obtenerCuenta(idCuenta);
         if (cuenta.getIdCuenta() == idCuenta) {
             listaCuentas.remove(cuenta);
+            cuenta.getUsuarioAsociado().getListaCuentasAsociadas().remove(cuenta);
             return true;
         }else {
             return false;
@@ -160,23 +187,90 @@ public class BilleteraVirtual implements IBilleteraVirtualServices {
     }
 
     @Override
-    public boolean actualizarCuenta(String nombre, String numeroIdentificacionActual, String numeroIdentificacion, String email, String numeroCelular) {
-        return false;
+    public boolean actualizarCuenta(int id, String nombreBanco,
+                                    String numeroCuenta,
+                                    TipoCuenta tipoCuenta) {
+        Cuenta cuenta = obtenerCuenta(id);
+        if (cuenta != null) {
+            cuenta.setNombreBanco(nombreBanco);
+            cuenta.setNumeroCuenta(numeroCuenta);
+            cuenta.setTipoCuenta(tipoCuenta);
+
+            List<Cuenta> cuentasUsuario = cuenta.getUsuarioAsociado().getListaCuentasAsociadas();
+            if (!cuentasUsuario.contains(cuenta)) {
+                cuentasUsuario.add(cuenta);
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
-    public boolean agregarPresupuesto(Usuario usuario) {
-        return false;
+    public boolean agregarPresupuesto(Presupuesto presupuesto) {
+        Presupuesto presupuesto1 = obtenerPresupuesto(presupuesto.getIdPresupuesto());
+        if (presupuesto1 == null) {
+            if (presupuesto.getCuentaAsociada().getPresupuesto() != null) {
+                return false;
+            }
+            listaPresupuestos.add(presupuesto);
+            presupuesto.getCuentaAsociada().setPresupuesto(presupuesto);
+            presupuesto.getCategoriaAsociada().getListaPresupuestos().add(presupuesto);
+
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    private Presupuesto obtenerPresupuesto(int idPresupuesto) {
+        Presupuesto presupuesto = null;
+        for (Presupuesto presupuesto1 : listaPresupuestos) {
+            if (presupuesto1.getIdPresupuesto() == idPresupuesto) {
+                presupuesto = presupuesto1;
+                break;
+            }
+        }
+
+        return presupuesto;
     }
 
     @Override
-    public boolean eliminarPresupuesto(String numeroIdentificacion) {
-        return false;
+    public boolean eliminarPresupuesto(int idPresupuesto) {
+        Presupuesto presupuesto = obtenerPresupuesto(idPresupuesto);
+        if (presupuesto.getIdPresupuesto() == idPresupuesto) {
+            listaPresupuestos.remove(presupuesto);
+            presupuesto.getCuentaAsociada().setPresupuesto(null);
+
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override
-    public boolean actualizarPresupuesto(String nombre, String numeroIdentificacionActual, String numeroIdentificacion, String email, String numeroCelular) {
-        return false;
+    public boolean actualizarPresupuesto(int idPresupuesto,
+                                         String nombre,
+                                         Double montoAsignado,
+                                         Cuenta cuenta,
+                                         Categoria categoria) {
+        Presupuesto presupuesto = obtenerPresupuesto(idPresupuesto);
+        if (presupuesto != null) {
+            presupuesto.setNombrePresupuesto(nombre);
+            presupuesto.setMontoAsignado(montoAsignado);
+            presupuesto.setCuentaAsociada(cuenta);
+            presupuesto.setCategoriaAsociada(categoria);
+
+            List<Cuenta> cuentasUsuario = cuenta.getUsuarioAsociado().getListaCuentasAsociadas();
+            if (!cuentasUsuario.contains(cuenta)) {
+                cuentasUsuario.add(cuenta);
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -193,8 +287,9 @@ public class BilleteraVirtual implements IBilleteraVirtualServices {
     private Usuario obtenerUsuario(String id) {
         Usuario usuario = null;
         for (Usuario usuario1 : listaUsuarios) {
-            if (usuario.getIdUsuario().equals(id)){
+            if (id.equals(usuario1.getIdUsuario())) {
                 usuario = usuario1;
+                break;
             }
         }
 
@@ -218,8 +313,106 @@ public class BilleteraVirtual implements IBilleteraVirtualServices {
     }
 
     @Override
+    public boolean actualizarPerfilUsuario(String nombre, String correo, String numeroTelefono) {
+        Usuario usuario = Sesion.getUsuarioActual();
+        if (usuario != null) {
+            usuario.setNombre(nombre);
+            usuario.setCorreo(correo);
+            usuario.setNumeroTelefono(numeroTelefono);
+
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean agregarTransaccion(Transaccion transaccion) {
-        listatransacciones.add(transaccion);
-        return true;
+        Transaccion transaccion1 = obtenerTransaccion(transaccion.getIdTransaccion());
+        if (transaccion1 == null) {
+            if (transaccion.getCuentaDestino() == null || transaccion.getCuentaDestino() != null ){
+                listatransacciones.add(transaccion);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Transaccion obtenerTransaccion(int idTransaccion) {
+        for (Transaccion transaccion : listatransacciones){
+            if (transaccion.getIdTransaccion() == idTransaccion) {
+                return transaccion;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean depositar(int idCuenta, double monto) {
+        if (monto <= 0) {
+            return false;
+        }
+
+        for (Cuenta cuenta : Sesion.getUsuarioActual().getListaCuentasAsociadas()) {
+            if (cuenta.getIdCuenta() == idCuenta && cuenta.getPresupuesto() != null) {
+                double nuevoMonto = cuenta.getPresupuesto().getMontoAsignado() + monto;
+                cuenta.getPresupuesto().setMontoAsignado(nuevoMonto);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean transferir(int idCuentaOrigen, int idCuentaDestino, double monto) {
+        for (Cuenta cuentaOrigen : Sesion.getUsuarioActual().getListaCuentasAsociadas()) {
+            if (cuentaOrigen.getIdCuenta() == idCuentaOrigen) {
+                for (Cuenta cuentaDestino : Sesion.getUsuarioActual().getListaCuentasAsociadas()) {
+                    if (cuentaDestino.getIdCuenta() == idCuentaDestino) {
+                        double restar = cuentaOrigen.getPresupuesto().getMontoAsignado() - monto;
+                        cuentaOrigen.getPresupuesto().setMontoAsignado(restar);
+                        double sumar = cuentaDestino.getPresupuesto().getMontoAsignado() + monto;
+                        cuentaDestino.getPresupuesto().setMontoAsignado(sumar);
+
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean retirar(int idCuenta,double monto) {
+        for (Cuenta cuenta : Sesion.getUsuarioActual().getListaCuentasAsociadas()) {
+            if (cuenta.getIdCuenta() == idCuenta && cuenta.getPresupuesto() != null &&
+                    cuenta.getPresupuesto().getMontoAsignado() > monto) {
+                double nuevoMonto = cuenta.getPresupuesto().getMontoAsignado() - monto;
+                cuenta.getPresupuesto().setMontoAsignado(nuevoMonto);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public List<Transaccion> obtenerTransaccionesDelUsuario() {
+        List<Transaccion> transaccionesUsuario = new ArrayList<>();
+        for (Cuenta cuenta : Sesion.getUsuarioActual().getListaCuentasAsociadas()) {
+            transaccionesUsuario.addAll(cuenta.getListaTransacciones());
+        }
+        return transaccionesUsuario;
+    }
+
+    public List<Presupuesto> obtenerPresupuestosCuentas() {
+        List<Presupuesto> listaPresupuestos = new ArrayList<>();
+        for (Cuenta cuenta : Sesion.getUsuarioActual().getListaCuentasAsociadas()) {
+            Presupuesto presupuesto = cuenta.getPresupuesto();
+            if (presupuesto != null) {
+                listaPresupuestos.add(presupuesto);
+            }
+        }
+        return listaPresupuestos;
     }
 }

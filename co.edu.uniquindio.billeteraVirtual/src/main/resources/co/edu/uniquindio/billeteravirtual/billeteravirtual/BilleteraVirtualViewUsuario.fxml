@@ -26,9 +26,9 @@
               <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                       <children>
-                          <SplitPane layoutX="18.0" layoutY="10.0" orientation="VERTICAL" prefHeight="450.0" prefWidth="628.0">
+                          <SplitPane layoutX="4.0" layoutY="7.0" orientation="VERTICAL" prefHeight="502.0" prefWidth="791.0">
                               <items>
-                                  <fx:include source="Login.fxml" />
+                                  <fx:include source="CrudPresupuesto.fxml" />
                               </items>
                           </SplitPane>
                       </children>
@@ -65,9 +65,9 @@
                 <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                         <children>
-                            <SplitPane layoutX="7.0" layoutY="3.0" orientation="VERTICAL" prefHeight="512.0" prefWidth="782.0">
+                            <SplitPane layoutX="2.0" layoutY="3.0" orientation="VERTICAL" prefHeight="512.0" prefWidth="794.0">
                                 <items>
-                                    <fx:include source="CrudUsuario.fxml" />
+                                    <fx:include source="Perfil.fxml" />
                                 </items>
                             </SplitPane>
                         </children>

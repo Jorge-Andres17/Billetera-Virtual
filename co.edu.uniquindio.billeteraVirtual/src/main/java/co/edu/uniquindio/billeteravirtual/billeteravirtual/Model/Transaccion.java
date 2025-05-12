@@ -1,41 +1,38 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Model;
 
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Enums.TipoTransaccion;
+
 import java.time.LocalDate;
 
 public class Transaccion {
-    private int idTransaccion;
+    private static int contadorId = 0;
+    private final int idTransaccion;
     private LocalDate fechaTransaccion;
     private double Monto;
     private String descripcion;
 
     private Cuenta cuentaOrigen;
     private Cuenta cuentaDestino;
-    private Categoria categoria;
+    private TipoTransaccion tipoTransaccion;
+    BilleteraVirtual ownedByBilleteraVirtual;
 
-    public Transaccion() {}
-
-    public Transaccion(int idTransaccion,
-                       LocalDate fechaTransaccion,
+    public Transaccion(LocalDate fechaTransaccion,
                        double monto,
                        String descripcion,
                        Cuenta cuentaOrigen,
                        Cuenta cuentaDestino,
-                       Categoria categoria) {
-        this.idTransaccion = idTransaccion;
+                       TipoTransaccion tipoTransaccion) {
+        this.idTransaccion = ++contadorId;
         this.fechaTransaccion = fechaTransaccion;
         this.Monto = monto;
         this.descripcion = descripcion;
         this.cuentaOrigen = cuentaOrigen;
         this.cuentaDestino = cuentaDestino;
-        this.categoria = categoria;
+        this.tipoTransaccion = tipoTransaccion;
     }
 
     public int getIdTransaccion() {
         return idTransaccion;
-    }
-
-    public void setIdTransaccion(int idTransaccion) {
-        this.idTransaccion = idTransaccion;
     }
 
     public LocalDate getFechaTransaccion() {
@@ -78,11 +75,19 @@ public class Transaccion {
         this.cuentaDestino = cuentaDestino;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public TipoTransaccion getTipoTransaccion() {
+        return tipoTransaccion;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public void setTipoTransaccion(TipoTransaccion tipoTransaccion) {
+        this.tipoTransaccion = tipoTransaccion;
+    }
+
+    public BilleteraVirtual getOwnedByBilleteraVirtual() {
+        return ownedByBilleteraVirtual;
+    }
+
+    public void setOwnedByBilleteraVirtual(BilleteraVirtual ownedByBilleteraVirtual) {
+        this.ownedByBilleteraVirtual = ownedByBilleteraVirtual;
     }
 }

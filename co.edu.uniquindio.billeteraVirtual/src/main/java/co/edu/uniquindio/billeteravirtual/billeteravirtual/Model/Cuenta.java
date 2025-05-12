@@ -15,6 +15,7 @@ public class Cuenta {
     private Usuario usuarioAsociado;
     private Presupuesto presupuesto = null;
     private List<Transaccion> listaTransacciones = new ArrayList<Transaccion>();
+    BilleteraVirtual ownedByBilleteraVirtual;
 
     public Cuenta(String nombreBanco,
                   String numeroCuenta,
@@ -77,5 +78,13 @@ public class Cuenta {
 
     public void setListaTransacciones(List<Transaccion> listaTransacciones) {
         this.listaTransacciones = listaTransacciones;
+    }
+
+    public BilleteraVirtual getOwnedByBilleteraVirtual() {
+        return ownedByBilleteraVirtual;
+    }
+
+    public void setOwnedByBilleteraVirtual(BilleteraVirtual ownedByBilleteraVirtual) {
+        this.ownedByBilleteraVirtual = ownedByBilleteraVirtual;
     }
 }

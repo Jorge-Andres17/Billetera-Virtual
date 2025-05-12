@@ -13,7 +13,5 @@ public class BilleteraVirtualViewUsuario {
     private URL location;
 
     @FXML
-    void initialize() {
-
-    }
+    void initialize() {}
 }

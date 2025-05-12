@@ -1,9 +1,10 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils;
 
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Administrador;
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.BilleteraVirtual;
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Categoria;
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Usuario;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.*;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Enums.TipoCuenta;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Enums.TipoTransaccion;
+
+import java.time.LocalDate;
 
 public class DataUtils {
 
@@ -25,13 +26,54 @@ public class DataUtils {
         usuario2.setClave("20");
 
         Categoria categoria = Categoria.builder()
-                .nombre("Maicol Perez")
-                .descripcion("MaidolPerez@gmail.con")
+                .nombre("Comida")
+                .descripcion("diaria")
                 .build();
+
+        Categoria categoria1 = Categoria.builder()
+                .nombre("Transporte")
+                .descripcion("semanal")
+                .build();
+
+        Cuenta cuenta = new Cuenta(
+                "Daviplata",
+                "0123",
+                TipoCuenta.AHORRO,
+                usuario
+        );
+
+        Cuenta cuenta1 = new Cuenta(
+                "Bancolombia",
+                "01234",
+                TipoCuenta.CORRIENTE,
+                usuario
+        );
+
+        Presupuesto presupuesto = new Presupuesto("Comida",
+                1000,
+                0,
+                cuenta,
+                categoria);
+
+        Presupuesto presupuesto1 = new Presupuesto("Transporte",
+                1000,
+                0,
+                cuenta1,
+                categoria1);
+
+        Transaccion transaccion = new Transaccion( LocalDate.of(2025, 5, 22),1000,"",cuenta,null, TipoTransaccion.DEPOSITO);
 
         billetera.getListaAdministradores().add(administrador);
         billetera.getListaUsuarios().add(usuario);
         billetera.getListaUsuarios().add(usuario2);
+        billetera.getListaCategorias().add(categoria);
+        billetera.getListaCategorias().add(categoria1);
+        billetera.agregarCuenta(cuenta);
+        billetera.agregarCuenta(cuenta1);
+        billetera.agregarPresupuesto(presupuesto);
+        billetera.agregarPresupuesto(presupuesto1);
+        billetera.getListatransacciones().add(transaccion);
+        cuenta.getListaTransacciones().add(transaccion);
 
         return billetera;
     }

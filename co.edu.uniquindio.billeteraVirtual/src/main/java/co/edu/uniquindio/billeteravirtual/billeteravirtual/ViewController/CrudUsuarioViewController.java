@@ -2,10 +2,9 @@ package co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+
+import java.util.Optional;
 
 public class CrudUsuarioViewController {
 
@@ -82,4 +81,27 @@ public class CrudUsuarioViewController {
 
     }
 
+    private void mostrarMensaje(String titulo,
+                                String header,
+                                String contenido,
+                                Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(titulo);
+        alert.setHeaderText(header);
+        alert.setContentText(contenido);
+        alert.showAndWait();
+    }
+
+    private boolean mostrarMensajeConfirmacion(String mensaje){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmacion");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        Optional<ButtonType> action = alert.showAndWait();
+        if(action.get() == ButtonType.OK){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

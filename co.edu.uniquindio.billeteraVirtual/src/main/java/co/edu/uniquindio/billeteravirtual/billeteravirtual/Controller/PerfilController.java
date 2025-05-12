@@ -1,16 +1,15 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Controller;
 
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Factory.ModelFactory;
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Usuario;
 
-public class RegistroController {
+public class PerfilController {
     ModelFactory modelFactory;
 
-    public RegistroController(){
+    public PerfilController(){
         modelFactory = ModelFactory.getInstancia();
     }
 
-    public boolean agregarUsuario(Usuario usuario) {
-        return modelFactory.agregarUsuario(usuario);
+    public boolean actualizarPerfilUsuario(String nombre, String correo, String numeroTelefono) {
+        return modelFactory.actualizarPerfilUsuario(nombre,correo,numeroTelefono);
     }
 }

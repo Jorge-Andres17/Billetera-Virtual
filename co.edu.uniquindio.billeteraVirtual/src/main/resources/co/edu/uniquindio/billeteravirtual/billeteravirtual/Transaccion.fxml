@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="471.0" prefWidth="759.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController.TransaccionViewController">
    <children>
       <Label layoutX="310.0" layoutY="14.0" text="Transaccion">
@@ -25,7 +24,7 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="396.0" layoutY="64.0" text="Categorias:">
+      <Label layoutX="366.0" layoutY="64.0" prefHeight="25.0" prefWidth="113.0" text="Transacciones:">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
@@ -46,7 +45,7 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="textMonto" layoutX="165.0" layoutY="170.0" prefHeight="25.0" prefWidth="198.0" />
+      <TextField fx:id="txtMonto" layoutX="165.0" layoutY="170.0" prefHeight="25.0" prefWidth="198.0" />
       <Separator layoutX="17.0" layoutY="208.0" prefHeight="5.0" prefWidth="726.0" />
       <Button fx:id="btnRealizarTransaccion" layoutX="295.0" layoutY="228.0" mnemonicParsing="false" onAction="#onRealizarTransaccion" text="Realizar Transaccion">
          <font>
@@ -55,17 +54,24 @@
       </Button>
       <TableView fx:id="tableTransaccion" layoutX="3.0" layoutY="279.0" prefHeight="189.0" prefWidth="753.0">
         <columns>
+            <TableColumn fx:id="tcIdTransaccion" prefWidth="87.0" text="ID" />
           <TableColumn fx:id="tcFecha" prefWidth="128.0" text="Fecha" />
           <TableColumn fx:id="tcCuentaOrigen" prefWidth="138.0" text="Cuenta Origen" />
             <TableColumn fx:id="tcCuentaDestino" prefWidth="159.0" text="Cuenta Destino" />
-            <TableColumn fx:id="tcMonto" prefWidth="151.0" text="Monto" />
-            <TableColumn fx:id="tcCategoria" prefWidth="176.0" text="Categoria" />
+            <TableColumn fx:id="tcMonto" prefWidth="123.0" text="Monto" />
+            <TableColumn fx:id="tcTipoTransaccion" prefWidth="115.0" text="Tipo Transaccion" />
         </columns>
       </TableView>
-      <DatePicker fx:id="DatePickerFecha" layoutX="162.0" layoutY="64.0" prefHeight="25.0" prefWidth="210.0" />
+      <DatePicker fx:id="DatePickerFecha" layoutX="162.0" layoutY="64.0" prefHeight="25.0" prefWidth="190.0" />
       <ComboBox layoutX="150.0" layoutY="-66.0" prefWidth="150.0" />
-      <ComboBox fx:id="cbCategorias" layoutX="483.0" layoutY="64.0" prefHeight="25.0" prefWidth="179.0" />
+      <ComboBox fx:id="cbTipoTransaccion" layoutX="483.0" layoutY="64.0" prefHeight="25.0" prefWidth="179.0" />
       <ComboBox fx:id="cbCuentaDestino" layoutX="517.0" layoutY="119.0" prefHeight="25.0" prefWidth="150.0" />
       <ComboBox fx:id="cbCuentaOrigen" layoutX="224.0" layoutY="119.0" prefWidth="150.0" />
+      <Label layoutX="396.0" layoutY="170.0" prefHeight="25.0" prefWidth="100.0" text="Descripcion:">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtDescripcion" layoutX="493.0" layoutY="170.0" prefHeight="25.0" prefWidth="179.0" promptText="Opcional" />
    </children>
 </AnchorPane>

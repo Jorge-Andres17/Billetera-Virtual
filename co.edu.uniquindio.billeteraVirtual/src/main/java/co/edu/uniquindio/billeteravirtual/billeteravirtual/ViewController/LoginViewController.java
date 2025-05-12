@@ -57,5 +57,4 @@ public class LoginViewController {
         Stage stage = (Stage) btnIniciarSesion.getScene().getWindow();
         stage.close();
     }
-
 }

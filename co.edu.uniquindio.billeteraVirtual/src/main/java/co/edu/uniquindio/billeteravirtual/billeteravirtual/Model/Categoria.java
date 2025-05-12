@@ -1,6 +1,7 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Model;
 
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Builder.CategoriaBuilder;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Service.IPresupuestoServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,8 @@ public class Categoria {
     private String nombre;
     private String descripcion;
 
-    private List<Transaccion> listaTransacciones = new ArrayList<Transaccion>();
+    private List<Presupuesto> listaPresupuestos = new ArrayList<Presupuesto>();
+    BilleteraVirtual  ownedByBilleteraVirtual;
 
     public static Categoria crearDesdeDto( String nombre, String descripcion) {
         Categoria categoria = new Categoria(nombre, descripcion);
@@ -49,11 +51,19 @@ public class Categoria {
         this.descripcion = descripcion;
     }
 
-    public List<Transaccion> getListaTransacciones() {
-        return listaTransacciones;
+    public List<Presupuesto> getListaPresupuestos() {
+        return listaPresupuestos;
     }
 
-    public void setListaTransacciones(List<Transaccion> listaTransacciones) {
-        this.listaTransacciones = listaTransacciones;
+    public void setListaPresupuestos(List<Presupuesto> listaPresupuestos) {
+        this.listaPresupuestos = listaPresupuestos;
+    }
+
+    public BilleteraVirtual getOwnedByBilleteraVirtual() {
+        return ownedByBilleteraVirtual;
+    }
+
+    public void setOwnedByBilleteraVirtual(BilleteraVirtual ownedByBilleteraVirtual) {
+        this.ownedByBilleteraVirtual = ownedByBilleteraVirtual;
     }
 }

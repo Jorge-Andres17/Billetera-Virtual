@@ -44,6 +44,20 @@ public class BilleteraVirtualApplication extends Application {
             e.printStackTrace();
         }
     }
+
+    public static void mostrarVentanaLogin() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(BilleteraVirtualApplication.class.getResource("Login_Registro.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = new Stage();
+            stage.setTitle("BilleteraVirtual");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         launch();
     }

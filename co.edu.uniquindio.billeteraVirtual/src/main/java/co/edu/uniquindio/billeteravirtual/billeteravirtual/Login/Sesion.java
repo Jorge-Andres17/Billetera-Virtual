@@ -22,4 +22,16 @@ public class Sesion {
     public static void setAdministradorActual(Administrador administrador) {
         administradorActual = administrador;
     }
+
+    public static void cerrarSesionUsuario() {
+        usuarioActual = null;
+    }
+
+    public static void cerrarSesionAdministrador() {
+        administradorActual = null;
+    }
+
+    public static boolean isUsuario(){
+        return usuarioActual != null;
+    }
 }

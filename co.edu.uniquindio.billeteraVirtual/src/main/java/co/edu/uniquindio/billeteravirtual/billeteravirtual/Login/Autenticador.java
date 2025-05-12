@@ -22,6 +22,7 @@ public class Autenticador implements IAutenticar {
     public Administrador getAdminAutenticado() {
         return administradorAutenticado;
     }
+
     @Override
     public boolean autenticarUsuario(String correo, String clave) {
         for (Usuario usuario1 : billeteraVirtual.getListaUsuarios()) {

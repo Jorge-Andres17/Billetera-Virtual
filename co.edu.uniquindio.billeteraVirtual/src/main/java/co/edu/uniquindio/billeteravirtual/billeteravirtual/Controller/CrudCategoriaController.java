@@ -27,4 +27,12 @@ public class CrudCategoriaController {
     public boolean eliminarCategoria(int idCategoria) {
         return modelFactory.eliminarCategoria(idCategoria);
     }
+
+    public boolean actualizarCategoria(int id, String nombre, String descripcion) {
+        return modelFactory.actualizarCategoria(id,nombre,descripcion);
+    }
+
+    public CategoriaDto actualizarCategoriaDto(int i, String nombre, String descripcion) {
+        return modelFactory.actualizarCategoriaDto(i, nombre,descripcion);
+    }
 }

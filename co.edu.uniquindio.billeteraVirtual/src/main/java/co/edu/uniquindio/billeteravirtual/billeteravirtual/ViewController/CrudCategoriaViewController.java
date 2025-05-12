@@ -2,13 +2,14 @@ package co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController;
 
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Controller.CrudCategoriaController;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Mapping.dto.CategoriaDto;
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Cuenta;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import java.util.Optional;
+import static co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.BilleteraVirtualConstantes.*;
 
 public class CrudCategoriaViewController {
     CrudCategoriaController crudCategoriaController;
@@ -59,6 +60,22 @@ public class CrudCategoriaViewController {
         listenerSelection();
     }
 
+    private void initDataBinding() {
+        tcIdCategoria.setCellValueFactory
+                (cellData -> new SimpleStringProperty
+                        (String.valueOf(cellData.getValue().idCategoria())));
+        tcNombre.setCellValueFactory
+                (cellData -> new SimpleStringProperty
+                        (cellData.getValue().nombre()));
+        tcDescripcion.setCellValueFactory
+                (cellData -> new SimpleStringProperty
+                        (cellData.getValue().descripcion()));
+    }
+
+    private void obtenerCategorias() {
+        listaCategorias.addAll(crudCategoriaController.obtenerCategorias());
+    }
+
     private void listenerSelection() {
         tableCategoria.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             selectedCategoria = newSelection;
@@ -73,31 +90,30 @@ public class CrudCategoriaViewController {
         }
     }
 
-    private void obtenerCategorias() {
-        listaCategorias.addAll(crudCategoriaController.obtenerCategorias());
-
-    }
-
-    private void initDataBinding() {
-        tcIdCategoria.setCellValueFactory
-                (cellData -> new SimpleStringProperty
-                        (String.valueOf(cellData.getValue().idCategoria())));
-        tcNombre.setCellValueFactory
-                (cellData -> new SimpleStringProperty
-                        (cellData.getValue().nombre()));
-        tcDescripcion.setCellValueFactory
-                (cellData -> new SimpleStringProperty
-                        (cellData.getValue().descripcion()));
-    }
-
     @FXML
-    void onActualizar(ActionEvent event) {
-
+    void onNuevo(ActionEvent event) {
+        nueva();
     }
 
     @FXML
     void onAgregar(ActionEvent event) {
         agregar();
+    }
+
+    @FXML
+    void onEliminar(ActionEvent event) {
+        eliminar();
+    }
+
+    @FXML
+    void onActualizar(ActionEvent event) {
+        actualizarCategoria();
+    }
+
+    private void nueva() {
+        txtNombre.setText("");
+        txtDescripcion.setText("");
+        tableCategoria.getSelectionModel().clearSelection();
     }
 
     private void agregar() {
@@ -109,26 +125,23 @@ public class CrudCategoriaViewController {
                 if (crudCategoriaController.agregarCategoria(nombre, descripcion)) {
                     listaCategorias.add(crudCategoriaController.agregarCategoriaDto(nombre, descripcion));
                     limpiarCampos();
-                /*mostrarMensaje(TITULO_USUARIO_AGREGADO,
-                        HEADER_INCOMPLETO,
-                        CONTENIDO_USUARIO_AGREGADO,
-                        Alert.AlertType.INFORMATION);*/
+                mostrarMensaje(TITULO_CATEGORIA_AGREGADO,
+                        HEADER_CATEGORIA_AGREGADO,
+                        BODY_CATEGORI_AGREGADO,
+                        Alert.AlertType.INFORMATION);
                 } else {
-                /*mostrarMensaje(TITULO_USUARIO_NO_AGREGADO,
-                        HEADER_INCOMPLETO,
-                        CONTENIDO_USUARIO_NO_AGREGADO,
-                        Alert.AlertType.ERROR);*/
+                mostrarMensaje(TITULO_CATEGORIA_NO_AGREGADO,
+                        HEADER_CATEGORIA_NO_AGREGADO,
+                        BODY_CATEGORIA_NO_AGREGADO,
+                        Alert.AlertType.ERROR);
                 }
             }
         }else {
-            /*mostrarMensaje(TITULO_INCOMPLETO,
+            mostrarMensaje(TITULO_INCOMPLETO,
                     HEADER_INCOMPLETO,
-                    CONTENIDO_INCOMPLETO,
-                    Alert.AlertType.WARNING);*/
+                    BODY_INCOMPLETO,
+                    Alert.AlertType.WARNING);
         }
-    }
-
-    private void limpiarCampos() {
     }
 
     private boolean datosValidos(String nombre, String descripcion) {
@@ -139,29 +152,88 @@ public class CrudCategoriaViewController {
         }
     }
 
-    @FXML
-    void onNuevo(ActionEvent event) {
-
-    }
-    
-    @FXML
-    void onEliminar(ActionEvent event) {
-        eliminar();
-    }
-
     private void eliminar() {
         CategoriaDto categoriaSeleccionada = tableCategoria.getSelectionModel().getSelectedItem();
         if (categoriaSeleccionada != null) {
-            if (crudCategoriaController.eliminarCategoria(categoriaSeleccionada.idCategoria())) {
-                listaCategorias.remove(categoriaSeleccionada);
-                limpiarCampos();
-            } else {
-                System.out.println("No se pudo eliminar la cuenta con ID " );
+            if(mostrarMensajeConfirmacion(MENSAJE_ELIMINAR_CATEGORIA)) {
+                if (crudCategoriaController.eliminarCategoria(categoriaSeleccionada.idCategoria())) {
+                    listaCategorias.remove(categoriaSeleccionada);
+                    limpiarCampos();
+                    mostrarMensaje(TITULO_ELIMINAR_CATEGORIA,
+                            HEADER_ELIMINAR_CATEGORIA,
+                            BODY_NOTIFICACION_ELIMINAR_CATEGORIA,
+                            Alert.AlertType.INFORMATION);
+                } else {
+                    mostrarMensaje(TITULO_NO_ELIMINAR_CATEGORIA,
+                            HEADER_NO_ELIMINAR_CATEGORIA,
+                            BODY_NOTIFICACION_NO_ELIMINAR_CATEGORIA,
+                            Alert.AlertType.ERROR);
+                }
+                tableCategoria.getSelectionModel().clearSelection();
             }
-        } else {
-            System.out.println("No se ha seleccionado ninguna cuenta para eliminar.");
+        }else {
+            mostrarMensaje(TITULO_NO_SELECCION,
+                    HEADER_NO_SELECCION,
+                    CONTENIDO_NO_SELECCION,
+                    Alert.AlertType.WARNING);
         }
-
     }
 
+    private void actualizarCategoria() {
+        CategoriaDto categoriaDto = tableCategoria.getSelectionModel().getSelectedItem();
+        int index = tableCategoria.getSelectionModel().getSelectedIndex();
+        if (categoriaDto != null && datosValidos(txtNombre.getText(),txtDescripcion.getText())) {
+            if (crudCategoriaController.actualizarCategoria(categoriaDto.idCategoria(),txtNombre.getText(),
+                    txtDescripcion.getText())){
+                listaCategorias.set(index,crudCategoriaController.actualizarCategoriaDto(categoriaDto.idCategoria(),txtNombre.getText(),
+                        txtDescripcion.getText()));
+                tableCategoria.refresh();
+                limpiarCampos();
+                mostrarMensaje(TITULO_ACTUALIZADA_CATEGORIA,
+                        HEADER_ACTUALIZADA_CATEGORIA,
+                        BODY_NOTIFICACION_ACTUALIZADA_CATEGORIA,
+                        Alert.AlertType.INFORMATION);
+            }else{
+                mostrarMensaje(TITULO_NO_ACTUALIZADA_CATEGORIA,
+                        HEADER_NO_ACTUALIZADA_CATEGORIA,
+                        BODY_NOTIFICACION_NO_ACTUALIZADA_CATEGORIA,
+                        Alert.AlertType.ERROR);
+            }
+        }else{
+            mostrarMensaje(TITULO_NO_SELECCION,
+                    HEADER_NO_SELECCION,
+                    CONTENIDO_NO_SELECCION,
+                    Alert.AlertType.WARNING);
+        }
+    }
+
+    private void limpiarCampos() {
+        txtNombre.clear();
+        txtDescripcion.clear();
+        tableCategoria.getSelectionModel().clearSelection();
+    }
+
+    private void mostrarMensaje(String titulo,
+                                String header,
+                                String contenido,
+                                Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(titulo);
+        alert.setHeaderText(header);
+        alert.setContentText(contenido);
+        alert.showAndWait();
+    }
+
+    private boolean mostrarMensajeConfirmacion(String mensaje){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmacion");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        Optional<ButtonType> action = alert.showAndWait();
+        if(action.get() == ButtonType.OK){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

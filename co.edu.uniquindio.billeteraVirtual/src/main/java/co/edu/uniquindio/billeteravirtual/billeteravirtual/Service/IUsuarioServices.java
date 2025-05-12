@@ -10,4 +10,6 @@ public interface IUsuarioServices {
                                   String numeroIdentificacion,
                                   String email,
                                   String numeroCelular);
+
+    boolean actualizarPerfilUsuario(String nombre, String correo, String numeroTelefono);
 }
