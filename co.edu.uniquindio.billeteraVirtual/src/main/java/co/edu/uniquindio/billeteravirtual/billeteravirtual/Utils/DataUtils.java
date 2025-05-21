@@ -18,10 +18,13 @@ public class DataUtils {
         administrador.setClave("123");
 
         Usuario usuario = new Usuario();
+        usuario.setNombre("Jorge");
+        usuario.setIdUsuario("102923");
         usuario.setCorreo("usuario");
         usuario.setClave("23");
 
         Usuario usuario2 = new Usuario();
+        usuario2.setNombre("Andres");
         usuario2.setCorreo("usuario");
         usuario2.setClave("20");
 
@@ -35,34 +38,45 @@ public class DataUtils {
                 .descripcion("semanal")
                 .build();
 
+        Presupuesto presupuesto = new Presupuesto("Comida",
+                1000,
+                0,
+                null,
+                categoria);
+
+        Presupuesto presupuesto1 = new Presupuesto("Transporte",
+                1000,
+                0,
+                null,
+                categoria1);
+
         Cuenta cuenta = new Cuenta(
                 "Daviplata",
                 "0123",
                 TipoCuenta.AHORRO,
-                usuario
+                usuario,
+                presupuesto
         );
 
         Cuenta cuenta1 = new Cuenta(
                 "Bancolombia",
                 "01234",
                 TipoCuenta.CORRIENTE,
-                usuario
+                usuario,
+                presupuesto1
         );
 
-        Presupuesto presupuesto = new Presupuesto("Comida",
-                1000,
-                0,
+
+
+        Transaccion transaccion = new Transaccion(
+                LocalDate.of(2025, 5, 22),1000,
+                "",
                 cuenta,
-                categoria);
+                null,
+                TipoTransaccion.DEPOSITO);
 
-        Presupuesto presupuesto1 = new Presupuesto("Transporte",
-                1000,
-                0,
-                cuenta1,
-                categoria1);
-
-        Transaccion transaccion = new Transaccion( LocalDate.of(2025, 5, 22),1000,"",cuenta,null, TipoTransaccion.DEPOSITO);
-
+        usuario.getListaPresupuestos().add(presupuesto);
+        usuario.getListaPresupuestos().add(presupuesto1);
         billetera.getListaAdministradores().add(administrador);
         billetera.getListaUsuarios().add(usuario);
         billetera.getListaUsuarios().add(usuario2);
@@ -70,8 +84,8 @@ public class DataUtils {
         billetera.getListaCategorias().add(categoria1);
         billetera.agregarCuenta(cuenta);
         billetera.agregarCuenta(cuenta1);
-        billetera.agregarPresupuesto(presupuesto);
-        billetera.agregarPresupuesto(presupuesto1);
+        billetera.getListaPresupuestos().add(presupuesto);
+        billetera.getListaPresupuestos().add(presupuesto1);
         billetera.getListatransacciones().add(transaccion);
         cuenta.getListaTransacciones().add(transaccion);
 

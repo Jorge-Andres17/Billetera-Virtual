@@ -16,23 +16,19 @@ public class CrudCategoriaController {
         return modelFactory.obtenerCategorias();
     }
 
-    public boolean agregarCategoria(String nombre, String descripcion) {
-        return modelFactory.agregarCategoria(nombre,descripcion);
-    }
-
     public CategoriaDto agregarCategoriaDto(String nombre, String descripcion) {
         return modelFactory.agregarCategoriaDto(nombre,descripcion);
     }
 
-    public boolean eliminarCategoria(int idCategoria) {
-        return modelFactory.eliminarCategoria(idCategoria);
+    public boolean eliminarCategoria(String nombre) {
+        return modelFactory.eliminarCategoria(nombre);
     }
 
-    public boolean actualizarCategoria(int id, String nombre, String descripcion) {
-        return modelFactory.actualizarCategoria(id,nombre,descripcion);
+    public boolean actualizarCategoria( String nombre, String descripcion) {
+        return modelFactory.actualizarCategoria(nombre,descripcion);
     }
 
-    public CategoriaDto actualizarCategoriaDto(int i, String nombre, String descripcion) {
-        return modelFactory.actualizarCategoriaDto(i, nombre,descripcion);
+    public CategoriaDto actualizarCategoriaDto( String nombre, String descripcion) {
+        return modelFactory.actualizarCategoriaDto( nombre,descripcion);
     }
 }

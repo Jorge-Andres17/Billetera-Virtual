@@ -65,6 +65,12 @@
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Button>
+                  <Label layoutX="419.0" layoutY="149.0" text="Clave:">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtClave" layoutX="476.0" layoutY="149.0" prefHeight="25.0" prefWidth="243.0" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
@@ -74,8 +80,9 @@
                       <TableColumn fx:id="tcNombre" prefWidth="134.0" text="Nombre" />
                       <TableColumn fx:id="tcCedula" prefWidth="141.0" text="Cedula" />
                         <TableColumn fx:id="tcCorreo" prefWidth="125.0" text="Correo" />
-                        <TableColumn fx:id="tcTelefono" prefWidth="97.0" text="Telefono" />
+                        <TableColumn fx:id="tcTelefono" prefWidth="106.0" text="Telefono" />
                         <TableColumn fx:id="tcDireccion" prefWidth="111.0" text="Direccion" />
+                        <TableColumn fx:id="tcClave" prefWidth="126.0" text="Clave" />
                     </columns>
                   </TableView>
                   <Button fx:id="btnEliminar" layoutX="343.0" layoutY="193.0" mnemonicParsing="false" onAction="#onEliminar" text="Eliminar">

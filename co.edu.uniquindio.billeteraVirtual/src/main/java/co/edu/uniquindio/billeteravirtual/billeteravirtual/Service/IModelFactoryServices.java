@@ -19,21 +19,20 @@ public interface IModelFactoryServices {
 
     List<Cuenta> obtenerCuentas();
 
-    boolean eliminarCuenta(int id);
+    boolean eliminarCuenta(int id,String numeroCuenta);
 
-    boolean actualizarCuenta(int idCuenta, String nombreBanco, String numeroCuenta, TipoCuenta tipoCuenta);
-
-    boolean agregarCategoria(String nombre, String descripcion);
+    boolean actualizarCuenta(int idCuenta, String nombreBanco, String numeroCuenta,
+                             TipoCuenta tipoCuenta,Presupuesto presupuesto);
 
     List<CategoriaDto> obtenerCategorias();
 
     CategoriaDto agregarCategoriaDto(String nombre, String descripcion);
 
-    boolean eliminarCategoria(int idCategoria);
+    boolean eliminarCategoria(String nombre);
 
-    boolean actualizarCategoria(int id, String nombre, String descripcion);
+    boolean actualizarCategoria( String nombre, String descripcion);
 
-    CategoriaDto actualizarCategoriaDto(int i, String nombre, String descripcion);
+    CategoriaDto actualizarCategoriaDto( String nombre, String descripcion);
 
     boolean agregarUsuario(Usuario usuario);
 
@@ -45,15 +44,9 @@ public interface IModelFactoryServices {
 
     List<Cuenta> obtenerPresupuestoCuenta();
 
-    boolean eliminarPresupuesto(int idPresupuesto);
+    boolean eliminarPresupuesto(String nombre);
 
-    boolean actualizarPresupuesto(int id, String nombrePresupuesto, Double montoAsignado, Cuenta cuenta, Categoria categoria);
-
-    boolean deposito(int idCuenta, double monto);
-
-    boolean transferencia(int idCuentaOrigen, int idCuentaDestino, double monto);
-
-    boolean retiro(int idCuenta, double monto);
+    boolean actualizarPresupuesto(String nombrePresupuesto, Double montoAsignado, Categoria categoria);
 
     List<Transaccion> obtenerTransacciones();
 
@@ -64,4 +57,19 @@ public interface IModelFactoryServices {
     List<Cuenta> obtenerCuentasAdmin();
 
     List<Transaccion> obtenerTransaccionesAdmin();
+
+    List<Usuario> obtenerUsuarios();
+
+    boolean eliminarUsuario(String idUsuario);
+
+    boolean actualizarUsuario(String nombre,
+                              String cedula,
+                              String correo,
+                              String telefono,
+                              String direccion,
+                              String clave);
+
+    List<Transaccion> obtenerAdminTransacciones();
+
+    List<Presupuesto> obtenerPresupuestosAdmin();
 }

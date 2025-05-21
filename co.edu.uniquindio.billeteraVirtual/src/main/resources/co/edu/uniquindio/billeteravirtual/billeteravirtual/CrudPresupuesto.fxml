@@ -21,8 +21,8 @@
                         <Font name="System Bold" size="25.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtNombrePresupuesto" layoutX="183.0" layoutY="78.0" prefHeight="25.0" prefWidth="175.0" />
-                  <TextField fx:id="txtMontoAsignado" layoutX="183.0" layoutY="116.0" prefHeight="25.0" prefWidth="175.0" />
+                  <TextField fx:id="txtNombrePresupuesto" layoutX="189.0" layoutY="78.0" prefHeight="25.0" prefWidth="219.0" />
+                  <TextField fx:id="txtMontoAsignado" layoutX="189.0" layoutY="116.0" prefHeight="25.0" prefWidth="219.0" />
                   <Label layoutX="120.0" layoutY="80.0" text="Nombre:">
                      <font>
                         <Font name="System Bold" size="15.0" />
@@ -31,13 +31,8 @@
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font></Label>
-                  <ComboBox fx:id="cbCuentasDisponibles" layoutX="540.0" layoutY="78.0" prefHeight="25.0" prefWidth="157.0" />
-                  <ComboBox fx:id="cbCategorias" layoutX="540.0" layoutY="116.0" prefHeight="25.0" prefWidth="157.0" />
-                  <Label layoutX="381.0" layoutY="80.0" text="Cuentas Disponibles:">
-                     <font>
-                        <Font name="System Bold" size="15.0" />
-                     </font></Label>
-                  <Label layoutX="440.0" layoutY="118.0" text="Categorias:">
+                  <ComboBox fx:id="cbCategorias" layoutX="543.0" layoutY="78.0" prefHeight="25.0" prefWidth="157.0" />
+                  <Label layoutX="443.0" layoutY="80.0" text="Categorias:">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font></Label>

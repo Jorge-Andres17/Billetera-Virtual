@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="510.0" prefWidth="776.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController.CrudCuentaAdminViewController">
+    <children>
+        <SplitPane dividerPositions="0.5172413793103449" layoutX="6.0" layoutY="8.0" orientation="VERTICAL" prefHeight="495.0" prefWidth="763.0">
+            <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                    <children>
+                        <Label layoutX="280.0" text="Registro de Cuentas">
+                            <font>
+                                <Font name="System Bold" size="25.0" />
+                            </font>
+                        </Label>
+                        <Label layoutX="80.0" layoutY="45.0" text="Nombre del Banco:">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                        </Label>
+                        <Label layoutX="79.0" layoutY="122.0" text="Tipo de Cuenta:">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                        </Label>
+                        <Label layoutX="80.0" layoutY="83.0" text="Numero de Cuenta:">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                        </Label>
+                        <ComboBox fx:id="cbTipoCuenta" layoutX="208.0" layoutY="122.0" prefHeight="25.0" prefWidth="184.0" />
+                        <TextField fx:id="txtNombreBanco" layoutX="235.0" layoutY="45.0" prefHeight="25.0" prefWidth="474.0" />
+                        <TextField fx:id="txtNumeroCuenta" layoutX="235.0" layoutY="83.0" prefHeight="25.0" prefWidth="474.0" />
+                        <Button fx:id="btnNuevo" layoutX="254.0" layoutY="204.0" mnemonicParsing="false" onAction="#onNuevo" text="Nuevo">
+                            <font>
+                                <Font name="System Bold" size="15.0" />
+                            </font>
+                        </Button>
+                        <Button fx:id="btnActualizar" layoutX="469.0" layoutY="204.0" mnemonicParsing="false" onAction="#onActualizar" text="Actualizar">
+                            <font>
+                                <Font name="System Bold" size="15.0" />
+                            </font>
+                        </Button>
+                        <Button fx:id="btnAgregar" layoutX="358.0" layoutY="204.0" mnemonicParsing="false" onAction="#onAgregar" text="Agregar">
+                            <font>
+                                <Font name="System Bold" size="15.0" />
+                            </font>
+                        </Button>
+                        <Label layoutX="424.0" layoutY="122.0" text="Presupuesto:">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                        </Label>
+                        <ComboBox fx:id="cbPresupuesto" layoutX="528.0" layoutY="122.0" prefHeight="25.0" prefWidth="184.0" />
+                  <Label layoutX="136.0" layoutY="160.0" text="Usuario:">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="cbUsuario" layoutX="208.0" layoutY="160.0" prefHeight="25.0" prefWidth="184.0" />
+                    </children>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="761.0">
+                    <children>
+                        <TableView fx:id="tableCuenta" layoutX="6.0" layoutY="4.0" prefHeight="185.0" prefWidth="751.0">
+                            <columns>
+                                <TableColumn fx:id="tcIdCuenta" prefWidth="90.0" text="ID Cuenta" />
+                                <TableColumn fx:id="tcNombreBanco" prefWidth="132.0" text="Banco" />
+                                <TableColumn fx:id="tcNumeroCuenta" prefWidth="148.0" text="Numero de Cuenta" />
+                                <TableColumn fx:id="tcTipoCuenta" prefWidth="143.0" text="Tipo de Cuenta" />
+                                <TableColumn fx:id="tcPresupuesto" prefWidth="131.0" text="Presupuesto" />
+                        <TableColumn fx:id="tcUsuario" prefWidth="106.0" text="Usuario" />
+                            </columns>
+                        </TableView>
+                        <Button fx:id="btnEliminar" layoutX="343.0" layoutY="198.0" mnemonicParsing="false" onAction="#onEliminar" text="Eliminar">
+                            <font>
+                                <Font name="System Bold" size="15.0" />
+                            </font>
+                        </Button>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
+
+</AnchorPane>

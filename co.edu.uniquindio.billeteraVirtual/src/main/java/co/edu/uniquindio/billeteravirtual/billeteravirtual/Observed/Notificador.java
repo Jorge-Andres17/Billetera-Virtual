@@ -1,23 +1,9 @@
-package co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController;
+package co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed;
 
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observer;
-import javafx.fxml.FXML;
-
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class BilleteraVirtualViewUsuario {
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
-
-    @FXML
-    void initialize() {}
-
+public class Notificador {
     private List<Observer> observers = new ArrayList<>();
 
     public void addObserver(Observer o) {

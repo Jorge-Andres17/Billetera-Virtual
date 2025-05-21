@@ -2,20 +2,21 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="482.0" prefWidth="729.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController.LoginViewController">
    <children>
-      <Label layoutX="183.0" layoutY="126.0" text="Correo:">
+      <Label layoutX="189.0" layoutY="127.0" text="Correo:">
          <font>
-            <Font size="18.0" />
+            <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Label layoutX="148.0" layoutY="186.0" text="Contraseña:">
+      <Label layoutX="151.0" layoutY="186.0" text="Contraseña:">
          <font>
-            <Font size="18.0" />
+            <Font name="System Bold" size="18.0" />
          </font>
       </Label>
       <Label layoutX="336.0" layoutY="50.0" text="Login">
@@ -24,11 +25,11 @@
          </font>
       </Label>
       <TextField fx:id="TxtCorreo" layoutX="260.0" layoutY="128.0" prefHeight="25.0" prefWidth="280.0" />
-      <TextField fx:id="TxtContraseña" layoutX="262.0" layoutY="187.0" prefHeight="25.0" prefWidth="280.0" />
       <Button fx:id="btnIniciarSesion" layoutX="305.0" layoutY="258.0" mnemonicParsing="false" onAction="#onIniciarSesion" text=" Iniciar Sesion" textAlignment="CENTER">
          <font>
-            <Font size="16.0" />
+            <Font name="System Bold" size="16.0" />
          </font>
       </Button>
+      <PasswordField fx:id="TxtContraseña" layoutX="262.0" layoutY="187.0" prefHeight="25.0" prefWidth="280.0" />
    </children>
 </AnchorPane>

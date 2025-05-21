@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="471.0" prefWidth="759.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController.TransaccionAdminViewController">
+    <children>
+        <Label layoutX="325.0" layoutY="13.0" text="Transaccion">
+            <font>
+                <Font name="System Bold" size="25.0" />
+            </font>
+        </Label>
+        <Separator layoutX="14.0" layoutY="44.0" prefHeight="5.0" prefWidth="726.0" />
+        <Label layoutX="105.0" layoutY="61.0" text="Fecha:">
+            <font>
+                <Font name="System Bold" size="16.0" />
+            </font>
+        </Label>
+        <Label layoutX="377.0" layoutY="61.0" prefHeight="25.0" prefWidth="113.0" text="Transacciones:">
+            <font>
+                <Font name="System Bold" size="16.0" />
+            </font>
+        </Label>
+        <Separator layoutX="16.0" layoutY="100.0" prefHeight="5.0" prefWidth="726.0" />
+        <Label layoutX="84.0" layoutY="153.0" text="Cuenta Origen:">
+            <font>
+                <Font name="System Bold" size="16.0" />
+            </font>
+        </Label>
+        <Label layoutX="401.0" layoutY="116.0" text="Cuenta Destino:">
+            <font>
+                <Font name="System Bold" size="16.0" />
+            </font>
+        </Label>
+        <Label layoutX="86.0" layoutY="193.0" prefHeight="5.0" prefWidth="56.0" text="Monto:">
+            <font>
+                <Font name="System Bold" size="16.0" />
+            </font>
+        </Label>
+        <TextField fx:id="txtMonto" layoutX="146.0" layoutY="193.0" prefHeight="25.0" prefWidth="209.0" />
+        <Separator layoutX="17.0" layoutY="229.0" prefHeight="5.0" prefWidth="726.0" />
+        <Button fx:id="btnRealizarTransaccion" layoutX="313.0" layoutY="240.0" mnemonicParsing="false" onAction="#onRealizarTransaccion" text="Realizar Transaccion">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Button>
+        <TableView fx:id="tableTransaccion" layoutX="3.0" layoutY="279.0" prefHeight="189.0" prefWidth="753.0">
+            <columns>
+                <TableColumn fx:id="tcIdTransaccion" prefWidth="68.0" text="ID" />
+                <TableColumn fx:id="tcFecha" prefWidth="102.0" text="Fecha" />
+                <TableColumn fx:id="tcCuentaOrigen" prefWidth="118.0" text="Cuenta Origen" />
+                <TableColumn fx:id="tcCuentaDestino" prefWidth="127.0" text="Cuenta Destino" />
+                <TableColumn fx:id="tcMonto" prefWidth="97.0" text="Monto" />
+                <TableColumn fx:id="tcTipoTransaccion" prefWidth="130.0" text="Tipo Transaccion" />
+            <TableColumn fx:id="tcUsuario" prefWidth="109.0" text="Usuario" />
+            </columns>
+        </TableView>
+        <DatePicker fx:id="DatePickerFecha" layoutX="162.0" layoutY="61.0" prefHeight="25.0" prefWidth="190.0" />
+        <ComboBox layoutX="150.0" layoutY="-66.0" prefWidth="150.0" />
+        <ComboBox fx:id="cbTipoTransaccion" layoutX="494.0" layoutY="61.0" prefHeight="25.0" prefWidth="179.0" />
+        <ComboBox fx:id="cbCuentaDestino" layoutX="523.0" layoutY="116.0" prefHeight="25.0" prefWidth="150.0" />
+        <ComboBox fx:id="cbCuentaOrigen" layoutX="205.0" layoutY="153.0" prefWidth="150.0" />
+        <Label layoutX="401.0" layoutY="153.0" prefHeight="25.0" prefWidth="100.0" text="Descripcion:">
+            <font>
+                <Font name="System Bold" size="16.0" />
+            </font>
+        </Label>
+        <TextField fx:id="txtDescripcion" layoutX="498.0" layoutY="153.0" prefHeight="25.0" prefWidth="179.0" promptText="Opcional" />
+      <Label layoutX="135.0" layoutY="116.0" text="Usuario:">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="cbUsuario" layoutX="206.0" layoutY="116.0" prefWidth="150.0" />
+    </children>
+</AnchorPane>

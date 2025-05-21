@@ -3,8 +3,10 @@ package co.edu.uniquindio.billeteravirtual.billeteravirtual.Service;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Categoria;
 
 public interface ICategoriaServices {
-    boolean agregarCategoria(Categoria categoria);
-    boolean eliminarCategoria(int idCategoria);
-    boolean actualizarCategoria(int id, String nombre,
+    Categoria agregarCategoria(String nombre, String descripcion);
+    boolean eliminarCategoria(String nombre);
+    boolean actualizarCategoria(String nombre,
                                   String descripcion);
+    Categoria actualizarCategoriaDto(String nombre,
+                                     String descripcion);
 }

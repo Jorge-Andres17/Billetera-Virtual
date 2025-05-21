@@ -75,4 +75,9 @@ public class Presupuesto {
     public void setOwnedByBilleteraVirtual(BilleteraVirtual ownedByBilleteraVirtual) {
         this.ownedByBilleteraVirtual = ownedByBilleteraVirtual;
     }
+
+    @Override
+    public String toString() {
+        return nombrePresupuesto;
+    }
 }

@@ -6,10 +6,11 @@ public interface IUsuarioServices {
     boolean agregarUsuario(Usuario usuario);
     boolean eliminarUsuario(String numeroIdentificacion);
     boolean actualizarUsuario(String nombre,
-                                  String numeroIdentificacionActual,
-                                  String numeroIdentificacion,
-                                  String email,
-                                  String numeroCelular);
+                              String cedula,
+                              String correo,
+                              String telefono,
+                              String direccion,
+                              String clave);
 
     boolean actualizarPerfilUsuario(String nombre, String correo, String numeroTelefono);
 }

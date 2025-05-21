@@ -12,6 +12,7 @@ public class Usuario {
     private String clave;
 
     private List<Cuenta> listaCuentasAsociadas = new ArrayList<Cuenta>();
+    private List<Presupuesto> listaPresupuestos = new ArrayList<Presupuesto>();
     BilleteraVirtual owedBilleteraVirtual;
 
     public Usuario(){}
@@ -84,6 +85,14 @@ public class Usuario {
 
     public void setListaCuentasAsociadas(List<Cuenta> listaCuentasAsociadas) {
         this.listaCuentasAsociadas = listaCuentasAsociadas;
+    }
+
+    public List<Presupuesto> getListaPresupuestos() {
+        return listaPresupuestos;
+    }
+
+    public void setListaPresupuestos(List<Presupuesto> listaPresupuestos) {
+        this.listaPresupuestos = listaPresupuestos;
     }
 
     public BilleteraVirtual getOwedBilleteraVirtual() {

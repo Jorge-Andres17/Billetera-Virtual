@@ -4,22 +4,24 @@ import co.edu.uniquindio.billeteravirtual.billeteravirtual.Controller.CrudPresup
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Categoria;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Cuenta;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Presupuesto;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Transaccion;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observadores.EventoCategoria;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observadores.EventoCuenta;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observadores.EventoTransaccion;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observer;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.util.StringConverter;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.BilleteraVirtualConstantes.*;
 
-public class CrudPresupuestoViewController {
+public class CrudPresupuestoViewController implements Observer {
     CrudPresupuestoController crudPresupuestoController;
     ObservableList<Presupuesto> listaPresupuestos = FXCollections.observableArrayList();
     Presupuesto selectedPresupuesto;
@@ -72,6 +74,7 @@ public class CrudPresupuestoViewController {
     @FXML
     void initialize() {
         crudPresupuestoController = new CrudPresupuestoController();
+        crudPresupuestoController.getModelFactory().getBilleteraVirtual().addObserver(this);
         cbCategorias.setItems(FXCollections.observableArrayList(crudPresupuestoController.obtenerCategorias()));
         cbCategorias.setCellFactory(lv -> new ListCell<>() {
             @Override
@@ -87,36 +90,8 @@ public class CrudPresupuestoViewController {
                 setText(empty || item == null ? null : item.getNombre());
             }
         });
-        cbCuentasDisponibles.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(Cuenta cuenta) {
-                return (cuenta != null) ? cuenta.getNumeroCuenta() : "";
-            }
-
-            @Override
-            public Cuenta fromString(String string) {
-                return cbCuentasDisponibles.getItems().stream()
-                        .filter(c -> c.getNumeroCuenta().equals(string))
-                        .findFirst().orElse(null);
-            }
-        });
-
+        cbCategorias.setPromptText("Selecciona una categoria");
         initView();
-        actualizarCuentasDisponibles();
-    }
-
-    private void actualizarCuentasDisponibles() {
-        List<Cuenta> todasLasCuentas = crudPresupuestoController.obtenerCuentas();
-
-        Set<Cuenta> cuentasAsignadas = crudPresupuestoController.obtenerPresupuestos().stream()
-                .map(Presupuesto::getCuentaAsociada)
-                .collect(Collectors.toSet());
-
-        List<Cuenta> cuentasDisponibles = todasLasCuentas.stream()
-                .filter(cuenta -> !cuentasAsignadas.contains(cuenta))
-                .collect(Collectors.toList());
-
-        cbCuentasDisponibles.setItems(FXCollections.observableArrayList(cuentasDisponibles));
     }
 
     private void initView() {
@@ -135,8 +110,11 @@ public class CrudPresupuestoViewController {
                 cellData -> new SimpleStringProperty(
                         cellData.getValue().getNombrePresupuesto()));
         tcCuenta.setCellValueFactory
-                (cellData -> new SimpleStringProperty
-                (cellData.getValue().getCuentaAsociada().getNumeroCuenta()));
+                (cellData -> {
+                    Cuenta cuenta = cellData.getValue().getCuentaAsociada();
+                    String texto = (cuenta != null) ? cuenta.getNumeroCuenta() : "Sin asociar";
+                    return new SimpleStringProperty(texto);
+                });
         tcCategoria.setCellValueFactory
                 (cellData -> new SimpleStringProperty
                 (cellData.getValue().getCategoriaAsociada().getNombre()));
@@ -163,7 +141,6 @@ public class CrudPresupuestoViewController {
         if(selectedPresupuesto != null){
             txtNombrePresupuesto.setText(selectedPresupuesto.getNombrePresupuesto());
             txtMontoAsignado.setText(String.valueOf(selectedPresupuesto.getMontoAsignado()));
-            cbCuentasDisponibles.setValue(selectedPresupuesto.getCuentaAsociada());
             cbCategorias.setValue(selectedPresupuesto.getCategoriaAsociada());
         }
     }
@@ -197,7 +174,6 @@ public class CrudPresupuestoViewController {
         if (datosValidos(presupuesto)) {
             if (crudPresupuestoController.agregarPresupuesto(presupuesto)) {
                 listaPresupuestos.add(presupuesto);
-                actualizarCuentasDisponibles();
                 limpiarCampos();
                 mostrarMensaje(TITULO_PRESUPUESTO_AGREGADO,
                         HEADER_PRESUPUESTO_AGREGADO,
@@ -217,12 +193,11 @@ public class CrudPresupuestoViewController {
         }
     }
 
-
     private Presupuesto crearPresupuesto() {
         return new Presupuesto(txtNombrePresupuesto.getText(),
                 Double.parseDouble(txtMontoAsignado.getText()),
                 0,
-                cbCuentasDisponibles.getValue(),
+                null,
                 cbCategorias.getValue());
     }
 
@@ -240,9 +215,7 @@ public class CrudPresupuestoViewController {
             return false;
         }
         if (cbCategorias == null ||
-                cbCategorias.getValue() == null
-                || cbCuentasDisponibles == null
-                || cbCuentasDisponibles.getValue() == null) {
+                cbCategorias.getValue() == null) {
             return false;
         }
 
@@ -253,9 +226,8 @@ public class CrudPresupuestoViewController {
         Presupuesto presupuesto = tablePresupuesto.getSelectionModel().getSelectedItem();
         if (presupuesto != null) {
             if (mostrarMensajeConfirmacion(MENSAJE_ELIMINAR_CUENTA)) {
-                if (crudPresupuestoController.eliminarPresupuesto(presupuesto.getIdPresupuesto())) {
+                if (crudPresupuestoController.eliminarPresupuesto(presupuesto.getNombrePresupuesto())) {
                     listaPresupuestos.remove(presupuesto);
-                    actualizarCuentasDisponibles();
                     limpiarCampos();
                     mostrarMensaje(TITULO_PRESUPUESTO_ELIMINADO,
                             HEADER_PRESUPUESTO_ELIMINADO,
@@ -267,6 +239,11 @@ public class CrudPresupuestoViewController {
                             BODY_PRESUPUESTO_NO_ELIMINADO,
                             Alert.AlertType.ERROR);
                 }
+            } else {
+                mostrarMensaje(TITULO_ELIMINACION_CANCELADA,
+                        HEADER,
+                        BODY_ELIMINACION_CANCELADA,
+                        Alert.AlertType.INFORMATION);
             }
         } else {
             mostrarMensaje(TITULO_INCOMPLETO,
@@ -279,12 +256,10 @@ public class CrudPresupuestoViewController {
     private void actualizar() {
         Presupuesto presupuesto = tablePresupuesto.getSelectionModel().getSelectedItem();
         if (presupuesto != null && datosValidos(presupuesto)) {
-            if (crudPresupuestoController.actualizarPresupuesto(presupuesto.getIdPresupuesto(),
-                    txtNombrePresupuesto.getText(),
+            if (crudPresupuestoController.actualizarPresupuesto(txtNombrePresupuesto.getText(),
                     Double.parseDouble(txtMontoAsignado.getText()),
-                    cbCuentasDisponibles.getValue(),
                     cbCategorias.getValue())) {
-                actualizarCuentasDisponibles();
+
                 limpiarCampos();
                 tablePresupuesto.refresh();
                 mostrarMensaje(TITULO_PRESUPUESTO_ACTUALIZADO,
@@ -308,7 +283,6 @@ public class CrudPresupuestoViewController {
     private void limpiarCampos() {
         txtNombrePresupuesto.clear();
         txtMontoAsignado.clear();
-        cbCuentasDisponibles.getSelectionModel().clearSelection();
         cbCategorias.getSelectionModel().clearSelection();
         tablePresupuesto.refresh();
         tablePresupuesto.getSelectionModel().clearSelection();
@@ -335,6 +309,46 @@ public class CrudPresupuestoViewController {
             return true;
         }else {
             return false;
+        }
+    }
+
+    @Override
+    public void update(Object evento) {
+        if (evento instanceof EventoCategoria e) {
+            Categoria categoria = e.getCategoria();
+            Platform.runLater(() -> {
+                switch (e.getTipo()) {
+                    case AGREGAR -> {
+                        if (!cbCategorias.getItems().contains(categoria)) {
+                            cbCategorias.getItems().add(categoria);
+                        }
+                    }
+                    case ELIMINAR -> cbCategorias.getItems().remove(categoria);
+                    case ACTUALIZAR -> {
+                        for (int i = 0; i < cbCategorias.getItems().size(); i++) {
+                            Categoria c = cbCategorias.getItems().get(i);
+                            if (c.getIdCategoria() == (categoria.getIdCategoria())) {
+                                cbCategorias.getItems().set(i, categoria);
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+        } else if (evento instanceof EventoCuenta e) {
+            Cuenta cuenta = e.getCuenta();
+            Platform.runLater(() -> {
+                switch (e.getTipo()) {
+                    case AGREGAR, ELIMINAR, ACTUALIZAR -> tablePresupuesto.refresh();
+                }
+            });
+        } else if (evento instanceof EventoTransaccion e) {
+            Transaccion transaccion = e.getTransaccion();
+            Platform.runLater(() -> {
+                switch (e.getTipo()){
+                    case AGREGAR -> tablePresupuesto.refresh();
+                }
+            });
         }
     }
 }

@@ -3,7 +3,11 @@ package co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Controller.TransaccionController;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Cuenta;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Enums.TipoTransaccion;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Presupuesto;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Transaccion;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observadores.EventoCuenta;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observer;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -20,7 +24,7 @@ import java.util.stream.Collectors;
 
 import static co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.BilleteraVirtualConstantes.*;
 
-public class TransaccionViewController {
+public class TransaccionViewController implements Observer {
     TransaccionController transaccionController;
     ObservableList<Transaccion> listaTransacciones = FXCollections.observableArrayList();
     Transaccion selectedTransaccion;
@@ -70,6 +74,7 @@ public class TransaccionViewController {
     @FXML
     void initialize() {
         transaccionController = new TransaccionController();
+        transaccionController.getModelFactory().getBilleteraVirtual().addObserver(this);
         cbTipoTransaccion.setItems(FXCollections.observableArrayList(TipoTransaccion.values()));
         ObservableList<Cuenta> cuentas = FXCollections.observableArrayList(transaccionController.obtenerCuentas());
         cbCuentaOrigen.setItems(cuentas);
@@ -104,6 +109,9 @@ public class TransaccionViewController {
                 cbCuentaDestino.setValue(null);
             }
         });
+        cbCuentaOrigen.setPromptText("Seleccionar");
+        cbCuentaDestino.setPromptText("Seleccionar");
+        cbTipoTransaccion.setPromptText("Seleccionar");
         initView();
     }
 
@@ -163,84 +171,25 @@ public class TransaccionViewController {
 
     private void realizarTransaccion() {
         Transaccion transaccion = crearTransaccion();
-        if (datosValidos(transaccion)) {
-            if (transaccion.getTipoTransaccion() == TipoTransaccion.DEPOSITO) {
-                if (transaccionController.deposito(transaccion.getCuentaOrigen().getIdCuenta(),
-                        transaccion.getMonto())) {
-                    if (transaccionController.agregarTransaccion(transaccion)) {
-                        listaTransacciones.add(transaccion);
-                        mostrarMensaje(TITULO_TRANSACCION_EXITOSA,
-                                HEADER_DEPOSITO_EXITOSO,
-                                BODY_DEPOSITO_EXITOSO,
-                                Alert.AlertType.INFORMATION);
-                    } else {
-                        mostrarMensaje(TITULO_REGISTRO_FALLIDO,
-                                HEADER_REGISTRO_FALLIDO,
-                                BODY_REGISTRO_FALLIDO,
-                                Alert.AlertType.ERROR);
-                    }
+            if (datosValidos(transaccion)) {
+                if (transaccionController.agregarTransaccion(transaccion)) {
+                    listaTransacciones.add(transaccion);
+                    mostrarMensaje(TITULO_TRANSACCION_EXITOSA,
+                            HEADER_TRANSACCION_EXITOSA,
+                            BODY_TRANSACCION_EXITOSA,
+                            Alert.AlertType.INFORMATION);
                 } else {
-                    mostrarMensaje(TITULO_TRANSACCION_FALLIDA,
-                            HEADER_OPERACION_FALLIDA,
-                            BODY_OPERACION_FALLIDA,
-                            Alert.AlertType.ERROR);
-                }
-            } else if (transaccion.getTipoTransaccion() == TipoTransaccion.TRANSFERENCIA) {
-                if (transaccionController.transferencia(
-                        transaccion.getCuentaOrigen().getIdCuenta(),
-                        transaccion.getCuentaDestino().getIdCuenta(),
-                        transaccion.getMonto())) {
-                    if (transaccionController.agregarTransaccion(transaccion)) {
-                        listaTransacciones.add(transaccion);
-                        mostrarMensaje(TITULO_TRANSACCION_EXITOSA,
-                                HEADER_TRANSFERENCIA_EXITOSA,
-                                BODY_TRANSFERENCIA_EXITOSA,
-                                Alert.AlertType.INFORMATION);
-                    } else {
-                        mostrarMensaje(TITULO_REGISTRO_FALLIDO,
-                                HEADER_REGISTRO_FALLIDO,
-                                BODY_REGISTRO_FALLIDO,
-                                Alert.AlertType.ERROR);
-                    }
-                } else {
-                    mostrarMensaje(TITULO_TRANSACCION_FALLIDA,
-                            HEADER_OPERACION_FALLIDA,
-                            BODY_OPERACION_FALLIDA,
-                            Alert.AlertType.ERROR);
-                }
-            } else if (transaccion.getTipoTransaccion() == TipoTransaccion.RETIRO) {
-                if (transaccionController.retiro(transaccion.getCuentaOrigen().getIdCuenta(),
-                        transaccion.getMonto())) {
-                    if (transaccionController.agregarTransaccion(transaccion)) {
-                        listaTransacciones.add(transaccion);
-                        mostrarMensaje(TITULO_TRANSACCION_EXITOSA,
-                                HEADER_RETIRO_EXITOSO,
-                                BODY_RETIRO_EXITOSO,
-                                Alert.AlertType.INFORMATION);
-                    } else {
-                        mostrarMensaje(TITULO_REGISTRO_FALLIDO,
-                                HEADER_REGISTRO_FALLIDO,
-                                BODY_REGISTRO_FALLIDO,
-                                Alert.AlertType.ERROR);
-                    }
-                } else {
-                    mostrarMensaje(TITULO_TRANSACCION_FALLIDA,
-                            HEADER_OPERACION_FALLIDA,
-                            BODY_OPERACION_FALLIDA,
+                    mostrarMensaje(TITULO_REGISTRO_FALLIDO,
+                            HEADER_REGISTRO_FALLIDO,
+                            BODY_REGISTRO_FALLIDO,
                             Alert.AlertType.ERROR);
                 }
             } else {
-                mostrarMensaje(TITULO_TRANSACCION_INVALIDA,
-                        HEADER_TIPO_INVALIDO,
-                        BODY_TIPO_INVALIDO,
+                mostrarMensaje(TITULO_INCOMPLETO,
+                        HEADER_INCOMPLETO,
+                        BODY_INCOMPLETO,
                         Alert.AlertType.WARNING);
             }
-        } else {
-            mostrarMensaje(TITULO_INCOMPLETO,
-                    HEADER_INCOMPLETO,
-                    BODY_INCOMPLETO,
-                    Alert.AlertType.WARNING);
-        }
     }
 
     private Transaccion crearTransaccion() {
@@ -253,21 +202,31 @@ public class TransaccionViewController {
     }
 
     private boolean datosValidos(Transaccion transaccion) {
-        if (transaccion.getTipoTransaccion() == TipoTransaccion.DEPOSITO
-                || transaccion.getTipoTransaccion() == TipoTransaccion.RETIRO) {
-            return transaccion.getFechaTransaccion() != null
-                    && !transaccion.getFechaTransaccion().isBefore(DatePickerFecha.getValue())
-                    && transaccion.getMonto() >= 0
-                    && transaccion.getCuentaOrigen() != null;
-        } else if (transaccion.getTipoTransaccion() == TipoTransaccion.TRANSFERENCIA) {
-            return transaccion.getFechaTransaccion() != null
-                    && !transaccion.getFechaTransaccion().isBefore(DatePickerFecha.getValue())
-                    && transaccion.getMonto() >= 0
-                    && transaccion.getCuentaOrigen() != null
-                    && transaccion.getCuentaDestino() != null
-                    && !transaccion.getCuentaDestino().equals(transaccion.getCuentaOrigen());
+        if (transaccion.getFechaTransaccion() == null
+                || transaccion.getFechaTransaccion().isBefore(DatePickerFecha.getValue())
+                || transaccion.getMonto() <= 0
+                || transaccion.getCuentaOrigen() == null) {
+            return false;
         }
-        return false;
+        Presupuesto presupuestoOrigen = transaccion.getCuentaOrigen().getPresupuesto();
+        if (presupuestoOrigen == null) {
+            return false;
+        }
+        double montoDisponible = presupuestoOrigen.getMontoAsignado();
+        switch (transaccion.getTipoTransaccion()) {
+            case DEPOSITO:
+                return true;
+
+            case RETIRO:
+                return montoDisponible >= transaccion.getMonto();
+
+            case TRANSFERENCIA:
+                return transaccion.getCuentaDestino() != null
+                        && !transaccion.getCuentaDestino().equals(transaccion.getCuentaOrigen())
+                        && montoDisponible >= transaccion.getMonto();
+            default:
+                return false;
+        }
     }
 
 
@@ -280,5 +239,35 @@ public class TransaccionViewController {
         alert.setHeaderText(header);
         alert.setContentText(contenido);
         alert.showAndWait();
+    }
+
+    @Override
+    public void update(Object evento) {
+        if (evento instanceof EventoCuenta e) {
+            Cuenta cuenta = e.getCuenta();
+            Platform.runLater(() -> {
+                switch (e.getTipo()) {
+                    case AGREGAR -> {
+                        if (!cbCuentaOrigen.getItems().contains(cuenta)) {
+                            cbCuentaOrigen.getItems().add(cuenta);
+                        }
+                    }
+                    case ELIMINAR -> {
+                        cbCuentaOrigen.getItems().removeIf(c ->
+                                c.getIdCuenta() == cuenta.getIdCuenta()
+                        );
+                    }
+                    case ACTUALIZAR -> {
+                        for (int i = 0; i < cbCuentaOrigen.getItems().size(); i++) {
+                            Cuenta c = cbCuentaOrigen.getItems().get(i);
+                            if (c.getIdCuenta() == cuenta.getIdCuenta()) {
+                                cbCuentaOrigen.getItems().set(i, cuenta);
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+        }
     }
 }

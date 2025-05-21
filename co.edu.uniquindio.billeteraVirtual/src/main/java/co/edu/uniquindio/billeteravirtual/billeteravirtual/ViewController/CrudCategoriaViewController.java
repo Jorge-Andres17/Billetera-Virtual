@@ -11,7 +11,7 @@ import javafx.scene.control.*;
 import java.util.Optional;
 import static co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.BilleteraVirtualConstantes.*;
 
-public class CrudCategoriaViewController {
+public class CrudCategoriaViewController{
     CrudCategoriaController crudCategoriaController;
     ObservableList<CategoriaDto> listaCategorias = FXCollections.observableArrayList();
     CategoriaDto selectedCategoria;
@@ -119,24 +119,32 @@ public class CrudCategoriaViewController {
     private void agregar() {
         String nombre = txtNombre.getText();
         String descripcion = txtDescripcion.getText();
-        if(datosValidos(nombre,descripcion)){
-            if (!listaCategorias.stream()
-                    .anyMatch(dto -> dto.nombre().equalsIgnoreCase(nombre))) {
-                if (crudCategoriaController.agregarCategoria(nombre, descripcion)) {
-                    listaCategorias.add(crudCategoriaController.agregarCategoriaDto(nombre, descripcion));
+        if (datosValidos(nombre, descripcion)) {
+            boolean existeEnLista = listaCategorias.stream()
+                    .anyMatch(dto -> dto.nombre().equalsIgnoreCase(nombre));
+            if (!existeEnLista) {
+                CategoriaDto nuevaCategoria = crudCategoriaController.agregarCategoriaDto(nombre, descripcion);
+                if (nuevaCategoria != null) {
+                    listaCategorias.add(nuevaCategoria);
+
                     limpiarCampos();
-                mostrarMensaje(TITULO_CATEGORIA_AGREGADO,
-                        HEADER_CATEGORIA_AGREGADO,
-                        BODY_CATEGORI_AGREGADO,
-                        Alert.AlertType.INFORMATION);
+                    mostrarMensaje(TITULO_CATEGORIA_AGREGADO,
+                            HEADER_CATEGORIA_AGREGADO,
+                            BODY_CATEGORI_AGREGADO,
+                            Alert.AlertType.INFORMATION);
                 } else {
+                    mostrarMensaje(TITULO_CATEGORIA_NO_AGREGADO,
+                            HEADER_CATEGORIA_NO_AGREGADO,
+                            BODY_CATEGORIA_NO_AGREGADO,
+                            Alert.AlertType.ERROR);
+                }
+            } else {
                 mostrarMensaje(TITULO_CATEGORIA_NO_AGREGADO,
                         HEADER_CATEGORIA_NO_AGREGADO,
                         BODY_CATEGORIA_NO_AGREGADO,
-                        Alert.AlertType.ERROR);
-                }
+                        Alert.AlertType.WARNING);
             }
-        }else {
+        } else {
             mostrarMensaje(TITULO_INCOMPLETO,
                     HEADER_INCOMPLETO,
                     BODY_INCOMPLETO,
@@ -156,7 +164,7 @@ public class CrudCategoriaViewController {
         CategoriaDto categoriaSeleccionada = tableCategoria.getSelectionModel().getSelectedItem();
         if (categoriaSeleccionada != null) {
             if(mostrarMensajeConfirmacion(MENSAJE_ELIMINAR_CATEGORIA)) {
-                if (crudCategoriaController.eliminarCategoria(categoriaSeleccionada.idCategoria())) {
+                if (crudCategoriaController.eliminarCategoria(categoriaSeleccionada.nombre())) {
                     listaCategorias.remove(categoriaSeleccionada);
                     limpiarCampos();
                     mostrarMensaje(TITULO_ELIMINAR_CATEGORIA,
@@ -169,7 +177,11 @@ public class CrudCategoriaViewController {
                             BODY_NOTIFICACION_NO_ELIMINAR_CATEGORIA,
                             Alert.AlertType.ERROR);
                 }
-                tableCategoria.getSelectionModel().clearSelection();
+            } else {
+                mostrarMensaje(TITULO_ELIMINACION_CANCELADA,
+                        HEADER,
+                        BODY_ELIMINACION_CANCELADA,
+                        Alert.AlertType.INFORMATION);
             }
         }else {
             mostrarMensaje(TITULO_NO_SELECCION,
@@ -180,26 +192,39 @@ public class CrudCategoriaViewController {
     }
 
     private void actualizarCategoria() {
-        CategoriaDto categoriaDto = tableCategoria.getSelectionModel().getSelectedItem();
+        CategoriaDto categoriaSeleccionada = tableCategoria.getSelectionModel().getSelectedItem();
         int index = tableCategoria.getSelectionModel().getSelectedIndex();
-        if (categoriaDto != null && datosValidos(txtNombre.getText(),txtDescripcion.getText())) {
-            if (crudCategoriaController.actualizarCategoria(categoriaDto.idCategoria(),txtNombre.getText(),
-                    txtDescripcion.getText())){
-                listaCategorias.set(index,crudCategoriaController.actualizarCategoriaDto(categoriaDto.idCategoria(),txtNombre.getText(),
-                        txtDescripcion.getText()));
+
+        if (categoriaSeleccionada != null && datosValidos(txtNombre.getText(), txtDescripcion.getText())) {
+            String nuevoNombre = txtNombre.getText();
+            String nuevaDescripcion = txtDescripcion.getText();
+            boolean existeDuplicado = listaCategorias.stream()
+                    .anyMatch(dto ->
+                            dto.nombre().equalsIgnoreCase(nuevoNombre));
+
+            if (existeDuplicado) {
+                mostrarMensaje(TITULO_NO_ACTUALIZADA_CATEGORIA,
+                        HEADER_NO_ACTUALIZADA_CATEGORIA,
+                        BODY_CATEGORIA_YA_EXISTE,
+                        Alert.AlertType.WARNING);
+                return;
+            }
+            if (crudCategoriaController.actualizarCategoria(nuevoNombre, nuevaDescripcion)) {
+                CategoriaDto categoriaActualizada = crudCategoriaController.actualizarCategoriaDto(nuevoNombre, nuevaDescripcion);
+                listaCategorias.set(index, categoriaActualizada);
                 tableCategoria.refresh();
                 limpiarCampos();
                 mostrarMensaje(TITULO_ACTUALIZADA_CATEGORIA,
                         HEADER_ACTUALIZADA_CATEGORIA,
                         BODY_NOTIFICACION_ACTUALIZADA_CATEGORIA,
                         Alert.AlertType.INFORMATION);
-            }else{
+            } else {
                 mostrarMensaje(TITULO_NO_ACTUALIZADA_CATEGORIA,
                         HEADER_NO_ACTUALIZADA_CATEGORIA,
                         BODY_NOTIFICACION_NO_ACTUALIZADA_CATEGORIA,
                         Alert.AlertType.ERROR);
             }
-        }else{
+        } else {
             mostrarMensaje(TITULO_NO_SELECCION,
                     HEADER_NO_SELECCION,
                     CONTENIDO_NO_SELECCION,

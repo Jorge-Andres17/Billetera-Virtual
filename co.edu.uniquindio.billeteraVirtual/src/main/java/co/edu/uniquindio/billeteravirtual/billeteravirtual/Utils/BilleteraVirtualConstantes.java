@@ -41,6 +41,7 @@ public class BilleteraVirtualConstantes {
     public static final String TITULO_NO_ACTUALIZADA_CATEGORIA = "Categoria no actualizada";
     public static final String HEADER_NO_ACTUALIZADA_CATEGORIA = "Notificacion";
     public static final String BODY_NOTIFICACION_NO_ACTUALIZADA_CATEGORIA = "La categoria no se pudo actualizar";
+    public static final String BODY_CATEGORIA_YA_EXISTE = "Ya existe la categoria.";
 
     public static final String TITULO_CUENTA_AGREGADA = "Notificacion de agregar";
     public static final String HEADER_CUENTA_AGREGADA = "Notificacion";
@@ -101,24 +102,39 @@ public class BilleteraVirtualConstantes {
     public static final String BODY_ACTUALIZACION_FALLIDA = "Ocurrió un error al intentar actualizar la información.";
 
     public static final String TITULO_TRANSACCION_EXITOSA = "Transacción exitosa";
-    public static final String HEADER_DEPOSITO_EXITOSO = "Depósito realizado";
-    public static final String BODY_DEPOSITO_EXITOSO = "El depósito se realizó correctamente.";
-
-    public static final String HEADER_TRANSFERENCIA_EXITOSA = "Transferencia realizada";
-    public static final String BODY_TRANSFERENCIA_EXITOSA = "La transferencia se realizó correctamente.";
-
-    public static final String HEADER_RETIRO_EXITOSO = "Retiro realizado";
-    public static final String BODY_RETIRO_EXITOSO = "El retiro se realizó correctamente.";
+    public static final String HEADER_TRANSACCION_EXITOSA = "Transaccion realizado";
+    public static final String BODY_TRANSACCION_EXITOSA = "La transaccion se realizó correctamente.";
 
     public static final String TITULO_TRANSACCION_FALLIDA = "Transacción fallida";
     public static final String HEADER_OPERACION_FALLIDA = "Operación no realizada";
     public static final String BODY_OPERACION_FALLIDA = "No se pudo completar la operación. Verifique e intente nuevamente.";
 
-    public static final String TITULO_REGISTRO_FALLIDO_TRANSACCION = "Registro de transacción fallido";
     public static final String HEADER_REGISTRO_FALLIDO = "No se registró la transacción";
-    public static final String BODY_REGISTRO_FALLIDO_TRANSACCION = "La transacción fue realizada pero no se registró.";
 
     public static final String TITULO_TRANSACCION_INVALIDA = "Transacción inválida";
     public static final String HEADER_TIPO_INVALIDO = "Tipo no válido";
     public static final String BODY_TIPO_INVALIDO = "Seleccione un tipo de transacción válido.";
+
+    public static final String TITULO_USUARIO_AGREGADO = "Usuario agregado";
+    public static final String BODY_USUARIO_AGREGADO = "Usuario agregado correctamente.";
+
+    public static final String TITULO_USUARIO_NO_AGREGADO = "Usuario no agregado";
+    public static final String BODY_USUARIO_NO_AGREGADO = "Usuario existente";
+
+    public static final String MENSAJE_ELIMINAR_USUARIO = "¿Desea eliminar el usuario?";
+
+    public static final String TITULO_USUARIO_ELIMINADO = "Usuario eliminado";
+    public static final String BODY_USUARIO_ELIMINADO = "Usuario eliminado correctamente.";
+
+    public static final String TITULO_USUARIO_NO_ELIMINADO = "Usuario no eliminado";
+    public static final String BODY_USUARIO_NO_ELIMINADO = "Error al eliminar el usuario";
+
+    public static final String TITULO_ELIMINACION_CANCELADA = "Eliminacion cancelada";
+    public static final String BODY_ELIMINACION_CANCELADA = "Se cancelo la eliminacion";
+
+    public static final String TITULO_USUARIO_ACTUALIZADO = "Usuario Actualizado";
+    public static final String BODY_USUARIO_ACTUALIZADO = "Usuario actualizado correctamente.";
+
+    public static final String TITULO_USUARIO_NO_ACTUALIZADO = "Usuario no actualizado";
+    public static final String BODY_USUARIO_NO_ACTUALIZADO = "Error al actualizar usuario";
 }

@@ -30,15 +30,17 @@ public class CrudPresupuestoController {
         return modelFactory.obtenerPresupuestoCuenta();
     }
 
-    public boolean eliminarPresupuesto(int idPresupuesto) {
-        return modelFactory.eliminarPresupuesto(idPresupuesto);
+    public boolean eliminarPresupuesto(String nombre) {
+        return modelFactory.eliminarPresupuesto(nombre);
     }
 
-    public boolean actualizarPresupuesto(int id,
-                                         String nombrePresupuesto,
+    public boolean actualizarPresupuesto(String nombrePresupuesto,
                                          Double montoAsignado,
-                                         Cuenta cuenta,
                                          Categoria categoria) {
-        return modelFactory.actualizarPresupuesto(id,nombrePresupuesto,montoAsignado,cuenta,categoria);
+        return modelFactory.actualizarPresupuesto(nombrePresupuesto,montoAsignado,categoria);
+    }
+
+    public ModelFactory getModelFactory() {
+        return modelFactory;
     }
 }

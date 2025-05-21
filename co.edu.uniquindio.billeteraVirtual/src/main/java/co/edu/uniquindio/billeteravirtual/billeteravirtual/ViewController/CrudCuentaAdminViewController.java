@@ -1,12 +1,13 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController;
 
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Controller.CrudCuentaController;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Controller.CrudCuentaAdminController;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Login.Sesion;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Cuenta;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Enums.TipoCuenta;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Enums.TipoTransaccion;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Presupuesto;
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observadores.EventoCuenta;
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observadores.EventoPresupuesto;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Usuario;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observadores.EventoUsuario;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observer;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -15,16 +16,26 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.util.StringConverter;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.BilleteraVirtualConstantes.*;
+import static co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.BilleteraVirtualConstantes.BODY_CUENTA_NO_AGREGADA;
+import static co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.BilleteraVirtualConstantes.BODY_INCOMPLETO;
+import static co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.BilleteraVirtualConstantes.HEADER_CUENTA_NO_AGREGADA;
+import static co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.BilleteraVirtualConstantes.HEADER_INCOMPLETO;
+import static co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.BilleteraVirtualConstantes.TITULO_CUENTA_NO_AGREGADA;
+import static co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.BilleteraVirtualConstantes.TITULO_INCOMPLETO;
 
-public class CrudCuentaViewController implements Observer {
-    CrudCuentaController cuentaController;
+public class CrudCuentaAdminViewController implements Observer {
+    CrudCuentaAdminController crudCuentaAdminController;
     ObservableList<Cuenta> listaCuentas = FXCollections.observableArrayList();
-    ObservableList<Presupuesto> listaPresupuesto = FXCollections.observableArrayList();
-    Cuenta selectedCuenta;
+    ObservableList<Usuario> listaUsuarios = FXCollections.observableArrayList();
+    ObservableList<Presupuesto> listaPresupuestos = FXCollections.observableArrayList();
+    Cuenta selectCuenta;
 
     @FXML
     private Button btnActualizar;
@@ -33,22 +44,19 @@ public class CrudCuentaViewController implements Observer {
     private Button btnAgregar;
 
     @FXML
-    private Button btnCerrarSesion;
-
-    @FXML
     private Button btnEliminar;
 
     @FXML
     private Button btnNuevo;
 
     @FXML
-    private Button btnDetalleCuenta;
-
-    @FXML
     private ComboBox<Presupuesto> cbPresupuesto;
 
     @FXML
     private ComboBox<TipoCuenta> cbTipoCuenta;
+
+    @FXML
+    private ComboBox<Usuario> cbUsuario;
 
     @FXML
     private TableView<Cuenta> tableCuenta;
@@ -69,97 +77,142 @@ public class CrudCuentaViewController implements Observer {
     private TableColumn<Cuenta, String> tcTipoCuenta;
 
     @FXML
+    private TableColumn<Cuenta, String> tcUsuario;
+
+    @FXML
     private TextField txtNombreBanco;
 
     @FXML
     private TextField txtNumeroCuenta;
 
     @FXML
-    void initialize() {
-        cuentaController = new CrudCuentaController();
-        cuentaController.getModelFactory().getBilleteraVirtual().addObserver(this);
-        cbTipoCuenta.setItems(FXCollections.observableArrayList(TipoCuenta.values()));
-        cbTipoCuenta.setPromptText("Seleccione un Tipo Cuenta");
-        listaPresupuesto.addAll(
-                cuentaController.obtenerPresupuestosDisponible().stream()
-                        .filter(p -> p.getCuentaAsociada() == null)
-                        .toList()
-        );
-        cbPresupuesto.setItems(listaPresupuesto);
-        cbPresupuesto.setPromptText("Seleccione un Presupuesto");
-        cbPresupuesto.setCellFactory(lv -> new ListCell<>() {
-            @Override
-            protected void updateItem(Presupuesto item, boolean empty) {
-                super.updateItem(item, empty);
-                setText((empty || item == null) ? null : item.getNombrePresupuesto());
-            }
-        });
-        cbPresupuesto.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(Presupuesto item, boolean empty) {
-                super.updateItem(item, empty);
-                setText((empty || item == null) ? null : item.getNombrePresupuesto());
-            }
-        });
-
+    void initialize(){
+        crudCuentaAdminController = new CrudCuentaAdminController();
+        crudCuentaAdminController.getModelFactory().getBilleteraVirtual().addObserver(this);
+        cbPresupuesto.setDisable(true);
         initView();
+        inicializarCombobox();
+        cbUsuario.valueProperty().addListener((obs, oldVal, newVal) -> validarEstadoPresupuestos());
     }
 
     private void initView() {
         initDataBinding();
-        obtenerCuentas();
+        obtenerListas();
         tableCuenta.getItems().clear();
         tableCuenta.setItems(listaCuentas);
         listenerSelection();
     }
 
     private void initDataBinding() {
-        tcIdCuenta.setCellValueFactory
-                (cellData -> new SimpleStringProperty
-                        (String.valueOf(cellData.getValue().getIdCuenta())));
-        tcNombreBanco.setCellValueFactory
-                (cellData -> new SimpleStringProperty
-                        (cellData.getValue().getNombreBanco()));
-        tcNumeroCuenta.setCellValueFactory
-                (cellData -> new SimpleStringProperty(
-                        cellData.getValue().getNumeroCuenta()));
-        tcTipoCuenta.setCellValueFactory
-                (cellData -> new SimpleStringProperty
-                        (cellData.getValue().getTipoCuenta().toString()));
-        tcPresupuesto.setCellValueFactory
-                (cellData -> {
-                    Presupuesto presupuesto = cellData.getValue().getPresupuesto();
-                    String texto = (presupuesto != null) ? presupuesto.getNombrePresupuesto() : "Sin asociar";
-                    return new SimpleStringProperty(texto);
-                });
+        tcIdCuenta.setCellValueFactory(cellData -> new
+                SimpleStringProperty(String.valueOf(cellData.getValue().getIdCuenta())));
+        tcNumeroCuenta.setCellValueFactory(cellData -> new
+                SimpleStringProperty(cellData.getValue().getNumeroCuenta()));
+        tcNombreBanco.setCellValueFactory(cellData -> new
+                SimpleStringProperty(cellData.getValue().getNombreBanco()));
+        tcTipoCuenta.setCellValueFactory(cellData -> new
+                SimpleStringProperty(cellData.getValue().getTipoCuenta().toString()));
+        tcPresupuesto.setCellValueFactory(cellData -> new
+                SimpleStringProperty(cellData.getValue().getPresupuesto().getNombrePresupuesto()));
+        tcUsuario.setCellValueFactory(cellData -> new
+                SimpleStringProperty(cellData.getValue().getUsuarioAsociado().getNombre()));
     }
 
-    private void obtenerCuentas() {
-        listaCuentas.addAll(cuentaController.obtenerCuentas());
-
+    private void obtenerListas() {
+        listaCuentas.addAll(crudCuentaAdminController.obtenerCuentas());
+        listaUsuarios.addAll(crudCuentaAdminController.obtenerUsuarios());
+        listaPresupuestos.addAll(crudCuentaAdminController.obtenerPresupuestos());
     }
 
     private void listenerSelection() {
         tableCuenta.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            selectedCuenta = newSelection;
-            mostrarInformacionCuenta(selectedCuenta);
+            selectCuenta = newSelection;
+            mostrarInformacionCuenta(selectCuenta);
         });
     }
 
     private void mostrarInformacionCuenta(Cuenta cuenta) {
-        if (cuenta != null) {
+        if(cuenta != null){
             txtNombreBanco.setText(cuenta.getNombreBanco());
             txtNumeroCuenta.setText(cuenta.getNumeroCuenta());
             cbTipoCuenta.setValue(cuenta.getTipoCuenta());
+            cbPresupuesto.setValue(cuenta.getPresupuesto());
+            cbUsuario.setValue(cuenta.getUsuarioAsociado());
+        }
+    }
 
-            Presupuesto presupuestoCuenta = cuenta.getPresupuesto();
-            cbPresupuesto.setValue(presupuestoCuenta);
+    private void inicializarCombobox() {
+        cbTipoCuenta.setItems(FXCollections.observableArrayList(TipoCuenta.values()));
+        cbTipoCuenta.setPromptText("Seleccionar");
+        configurarComboBox(cbUsuario,
+                FXCollections.observableArrayList(
+                        listaUsuarios.stream()
+                                .filter(usuario -> usuario.getNombre() != null ||
+                                        usuario.getIdUsuario() != null)
+                                .collect(Collectors.toList())
+                ),
+                new StringConverter<Usuario>() {
+                    @Override
+                    public String toString(Usuario usuario) {
+                        return usuario != null ? usuario.getNombre() : "";
+                    }
+
+                    @Override
+                    public Usuario fromString(String string) {
+                        return cbUsuario.getItems().stream()
+                                .filter(u -> u.getNombre().equals(string))
+                                .findFirst()
+                                .orElse(null);
+                    }
+                });
+        configurarComboBox(cbPresupuesto,
+                FXCollections.observableArrayList(
+                        listaPresupuestos.stream()
+                                .filter(presupuesto -> presupuesto.getNombrePresupuesto()
+                                        != null)
+                                .collect(Collectors.toList())
+                ),
+                new StringConverter<Presupuesto>() {
+                    @Override
+                    public String toString(Presupuesto presupuesto) {
+                        return presupuesto != null ? presupuesto.getNombrePresupuesto() : "";
+                    }
+
+                    @Override
+                    public Presupuesto fromString(String string) {
+                        return cbPresupuesto.getItems().stream()
+                                .filter(p -> p.getCuentaAsociada().getUsuarioAsociado().equals(string))
+                                .findFirst()
+                                .orElse(null);
+                    }
+                });
+    }
+
+    private <T> void configurarComboBox(ComboBox<T> comboBox, ObservableList<T> items, StringConverter<T> converter) {
+        comboBox.setItems(items);
+        comboBox.setPromptText("Seleccionar");
+        comboBox.setConverter(converter);
+    }
+
+    private void validarEstadoPresupuestos() {
+        Usuario usuario = cbUsuario.getValue();
+        cbPresupuesto.setDisable(true);
+        cbPresupuesto.setValue(null);
+        if (usuario != null) {
+            List<Presupuesto> presupuestosDelUsuario = usuario.getListaPresupuestos();
+            ObservableList<Presupuesto> presupuestosUsuario = FXCollections.observableArrayList(
+                    presupuestosDelUsuario.stream()
+                            .filter(p -> p.getCuentaAsociada() == null)
+                            .collect(Collectors.toList())
+            );
+            cbPresupuesto.setDisable(false);
+            cbPresupuesto.setItems(presupuestosUsuario);
         }
     }
 
     @FXML
     void onNuevo(ActionEvent event) {
-        nueva();
+        limpiarCampos();
     }
 
     @FXML
@@ -177,25 +230,11 @@ public class CrudCuentaViewController implements Observer {
         actualizarCuenta();
     }
 
-    @FXML
-    void onDetalleCuenta(ActionEvent event) {
-        detallesCuenta();
-    }
-
-    private void nueva() {
-        txtNombreBanco.setText("");
-        txtNumeroCuenta.setText("");
-        cbTipoCuenta.setValue(null);
-        cbPresupuesto.setValue(null);
-        tableCuenta.getSelectionModel().clearSelection();
-    }
-
     private void agregarCuenta() {
         Cuenta cuenta = crearCuenta();
-        if(datosValidos(cuenta)){
-            if(cuentaController.agregarCuenta(cuenta)){
+        if (datosValidos(cuenta)){
+            if(crudCuentaAdminController.agregarCuenta(cuenta)){
                 listaCuentas.add(cuenta);
-                listaPresupuesto.remove(cuenta.getPresupuesto());
                 limpiarCampos();
                 tableCuenta.getSelectionModel().clearSelection();
                 mostrarMensaje(TITULO_CUENTA_AGREGADA,
@@ -220,7 +259,8 @@ public class CrudCuentaViewController implements Observer {
         if (cuenta.getNombreBanco().isBlank() ||
                 cuenta.getNumeroCuenta().isBlank() ||
                 cuenta.getTipoCuenta() == null ||
-        cuenta.getPresupuesto() == null) {
+                cuenta.getPresupuesto() == null ||
+                cuenta.getUsuarioAsociado() == null) {
             return false;
         }else {
             return true;
@@ -231,7 +271,7 @@ public class CrudCuentaViewController implements Observer {
         return new Cuenta(txtNombreBanco.getText(),
                 txtNumeroCuenta.getText(),
                 cbTipoCuenta.getSelectionModel().getSelectedItem(),
-                Sesion.getUsuarioActual(),
+                cbUsuario.getSelectionModel().getSelectedItem(),
                 cbPresupuesto.getSelectionModel().getSelectedItem());
     }
 
@@ -239,7 +279,7 @@ public class CrudCuentaViewController implements Observer {
         Cuenta cuentaSeleccionada = tableCuenta.getSelectionModel().getSelectedItem();
         if (cuentaSeleccionada != null) {
             if(mostrarMensajeConfirmacion(MENSAJE_ELIMINAR_CUENTA)) {
-                if (cuentaController.eliminarCuenta(cuentaSeleccionada.getIdCuenta(),
+                if (crudCuentaAdminController.eliminarCuenta(cuentaSeleccionada.getIdCuenta(),
                         cuentaSeleccionada.getNumeroCuenta())) {
                     listaCuentas.remove(cuentaSeleccionada);
                     limpiarCampos();
@@ -270,7 +310,7 @@ public class CrudCuentaViewController implements Observer {
     private void actualizarCuenta() {
         Cuenta cuentaSeleccionada = tableCuenta.getSelectionModel().getSelectedItem();
         if(cuentaSeleccionada != null && datosValidos(cuentaSeleccionada)){
-            if (cuentaController.actualizarCuenta(cuentaSeleccionada.getIdCuenta(),
+            if (crudCuentaAdminController.actualizarCuenta(cuentaSeleccionada.getIdCuenta(),
                     txtNombreBanco.getText(),txtNumeroCuenta.getText(),
                     cbTipoCuenta.getSelectionModel().getSelectedItem(),
                     cbPresupuesto.getSelectionModel().getSelectedItem())){
@@ -294,19 +334,12 @@ public class CrudCuentaViewController implements Observer {
         }
     }
 
-    private void detallesCuenta() {
-        Cuenta cuentaSeleccionada = tableCuenta.getSelectionModel().getSelectedItem();
-        if(cuentaSeleccionada != null){
-            mostrarMensajeConfirmacion(cuentaSeleccionada.toString());
-        }
-    }
-
     private void limpiarCampos() {
-        txtNumeroCuenta.clear();
         txtNombreBanco.clear();
-        cbTipoCuenta.setValue(null);
+        txtNumeroCuenta.clear();
         cbPresupuesto.setValue(null);
-        tableCuenta.getSelectionModel().clearSelection();
+        cbTipoCuenta.setValue(null);
+        cbUsuario.setValue(null);
     }
 
     private void mostrarMensaje(String titulo,
@@ -335,61 +368,26 @@ public class CrudCuentaViewController implements Observer {
 
     @Override
     public void update(Object evento) {
-        if (evento instanceof EventoPresupuesto e) {
-            Presupuesto presupuesto = e.getPresupuesto();
+        if (evento instanceof EventoUsuario e) {
+            Usuario usuario = e.getUsuario();
             Platform.runLater(() -> {
                 switch (e.getTipo()) {
                     case AGREGAR -> {
-                        if (presupuesto.getCuentaAsociada() == null && !cbPresupuesto.getItems().contains(presupuesto)) {
-                            cbPresupuesto.getItems().add(presupuesto);
+                        if (!cbUsuario.getItems().contains(usuario)) {
+                            cbUsuario.getItems().add(usuario);
                         }
                     }
                     case ELIMINAR -> {
-                        cbPresupuesto.getItems().remove(presupuesto);
+                        cbUsuario.getItems().removeIf(u ->
+                                u.getIdUsuario() == usuario.getIdUsuario()
+                        );
                     }
                     case ACTUALIZAR -> {
-                        for (int i = 0; i < cbPresupuesto.getItems().size(); i++) {
-                            Presupuesto p = cbPresupuesto.getItems().get(i);
-                            if (p.getIdPresupuesto() == presupuesto.getIdPresupuesto()) {
-                                cbPresupuesto.getItems().set(i, presupuesto);
-                                return;
-                            }
-                        }
-                        if (presupuesto.getCuentaAsociada() == null) {
-                            cbPresupuesto.getItems().add(presupuesto);
-                        }
-                    }
-                }
-            });
-        } else if (evento instanceof EventoCuenta e) {
-            Cuenta cuenta = e.getCuenta();
-            Presupuesto presupuesto = cuenta.getPresupuesto();
-            Platform.runLater(() -> {
-                switch (e.getTipo()) {
-                    case AGREGAR -> {
-                        if (presupuesto != null && cbPresupuesto.getItems().contains(presupuesto)) {
-                            cbPresupuesto.getItems().remove(presupuesto);
-                        }
-                    }
-                    case ELIMINAR -> {
-                        if (presupuesto != null && !cbPresupuesto.getItems().contains(presupuesto)) {
-                            cbPresupuesto.getItems().add(presupuesto);
-                        }
-                    }
-                    case ACTUALIZAR -> {
-                        if (presupuesto != null) {
-                            // Actualizar presupuesto en la lista
-                            boolean encontrado = false;
-                            for (int i = 0; i < cbPresupuesto.getItems().size(); i++) {
-                                Presupuesto p = cbPresupuesto.getItems().get(i);
-                                if (p.getIdPresupuesto() == presupuesto.getIdPresupuesto()) {
-                                    cbPresupuesto.getItems().set(i, presupuesto);
-                                    encontrado = true;
-                                    break;
-                                }
-                            }
-                            if (!encontrado && presupuesto.getCuentaAsociada() == null) {
-                                cbPresupuesto.getItems().add(presupuesto);
+                        for (int i = 0; i < cbUsuario.getItems().size(); i++) {
+                            Usuario u = cbUsuario.getItems().get(i);
+                            if (u.getIdUsuario() == usuario.getIdUsuario()) {
+                                cbUsuario.getItems().set(i, usuario);
+                                break;
                             }
                         }
                     }

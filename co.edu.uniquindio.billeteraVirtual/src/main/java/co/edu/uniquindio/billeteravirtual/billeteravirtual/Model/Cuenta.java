@@ -13,19 +13,21 @@ public class Cuenta {
     private TipoCuenta tipoCuenta;
 
     private Usuario usuarioAsociado;
-    private Presupuesto presupuesto = null;
+    private Presupuesto presupuesto;
     private List<Transaccion> listaTransacciones = new ArrayList<Transaccion>();
     BilleteraVirtual ownedByBilleteraVirtual;
 
     public Cuenta(String nombreBanco,
                   String numeroCuenta,
                   TipoCuenta tipoCuenta,
-                  Usuario usuarioAsociado) {
+                  Usuario usuarioAsociado,
+                  Presupuesto presupuesto) {
         this.idCuenta = ++contadorId;
         this.nombreBanco = nombreBanco;
         this.numeroCuenta = numeroCuenta;
         this.tipoCuenta = tipoCuenta;
         this.usuarioAsociado = usuarioAsociado;
+        this.presupuesto = presupuesto;
     }
 
     public int getIdCuenta() {

@@ -31,120 +31,156 @@ public class ModelFactory implements IModelFactoryServices {
         autenticador = new Autenticador(billeteraVirtual);
     }
 
+    @Override
     public boolean autenticarUsuario(String correo, String clave) {
         return autenticador.autenticarUsuario(correo, clave);
     }
 
+    @Override
     public boolean autenticarAdministrador(String correo, String clave) {
         return autenticador.autenticarAdmin(correo, clave);
     }
 
+    @Override
     public Autenticador getAutenticador() {
         return autenticador;
     }
 
+    @Override
     public boolean agregarCuenta(Cuenta cuenta) {
         return billeteraVirtual.agregarCuenta(cuenta);
     }
 
+    @Override
     public List<Cuenta> obtenerCuentas() {
         return Sesion.getUsuarioActual().getListaCuentasAsociadas();
     }
 
-    public boolean eliminarCuenta(int id) {
-        return billeteraVirtual.eliminarCuenta(id);
+    @Override
+    public boolean eliminarCuenta(int id,String numeroCuenta) {
+        return billeteraVirtual.eliminarCuenta(id, numeroCuenta);
     }
 
-    public boolean actualizarCuenta(int idCuenta, String nombreBanco, String numeroCuenta, TipoCuenta tipoCuenta) {
-        return billeteraVirtual.actualizarCuenta(idCuenta, nombreBanco, numeroCuenta, tipoCuenta);
+    @Override
+    public boolean actualizarCuenta(int idCuenta, String nombreBanco, String numeroCuenta, TipoCuenta tipoCuenta,
+                                    Presupuesto presupuesto) {
+        return billeteraVirtual.actualizarCuenta(idCuenta, nombreBanco, numeroCuenta, tipoCuenta,presupuesto);
     }
 
-    public boolean agregarCategoria(String nombre, String descripcion) {
-        return billeteraVirtual.agregarCategoria(mapper.categoriaDtoToCategoria(nombre, descripcion));
-    }
-
+    @Override
     public List<CategoriaDto> obtenerCategorias() {
         return mapper.getCategoriaDto(billeteraVirtual.getListaCategorias());
     }
 
+    @Override
     public CategoriaDto agregarCategoriaDto(String nombre, String descripcion) {
         return mapper.categoriaToCategoriaDto(billeteraVirtual.agregarCategoria(nombre, descripcion));
     }
 
-    public boolean eliminarCategoria(int idCategoria) {
-        return billeteraVirtual.eliminarCategoria(idCategoria);
+    @Override
+    public boolean eliminarCategoria(String nombre) {
+        return billeteraVirtual.eliminarCategoria(nombre);
     }
 
-    public boolean actualizarCategoria(int id, String nombre, String descripcion) {
-        return billeteraVirtual.actualizarCategoria(id, nombre, descripcion);
+    @Override
+    public boolean actualizarCategoria(String nombre, String descripcion) {
+        return billeteraVirtual.actualizarCategoria( nombre, descripcion);
     }
 
-    public CategoriaDto actualizarCategoriaDto(int i, String nombre, String descripcion) {
-        return mapper.categoriaToCategoriaDto(billeteraVirtual.actualizarCategoriaDto(i, nombre, descripcion));
+    @Override
+    public CategoriaDto actualizarCategoriaDto(String nombre, String descripcion) {
+        return mapper.categoriaToCategoriaDto(billeteraVirtual.actualizarCategoriaDto( nombre, descripcion));
     }
 
+    @Override
     public boolean agregarUsuario(Usuario usuario) {
         return billeteraVirtual.agregarUsuario(usuario);
     }
 
+    @Override
     public boolean agregarPresupuesto(Presupuesto presupuesto) {
         return billeteraVirtual.agregarPresupuesto(presupuesto);
     }
 
+    @Override
     public List<Presupuesto> obtenerPresupuestos() {
-        return billeteraVirtual.obtenerPresupuestosCuentas();
+        return Sesion.getUsuarioActual().getListaPresupuestos();
     }
 
+    @Override
     public List<Categoria> obtenerPresupuestoCategorias() {
         return billeteraVirtual.getListaCategorias();
     }
 
+    @Override
     public List<Cuenta> obtenerPresupuestoCuenta() {
         return Sesion.getUsuarioActual().getListaCuentasAsociadas();
     }
 
-    public boolean eliminarPresupuesto(int idPresupuesto) {
-        return billeteraVirtual.eliminarPresupuesto(idPresupuesto);
+    @Override
+    public boolean eliminarPresupuesto(String nombre) {
+        return billeteraVirtual.eliminarPresupuesto(nombre);
     }
 
-    public boolean actualizarPresupuesto(int id,
-                                         String nombrePresupuesto,
+    @Override
+    public boolean actualizarPresupuesto(String nombrePresupuesto,
                                          Double montoAsignado,
-                                         Cuenta cuenta,
                                          Categoria categoria) {
-        return billeteraVirtual.actualizarPresupuesto(id, nombrePresupuesto, montoAsignado, cuenta, categoria);
+        return billeteraVirtual.actualizarPresupuesto(nombrePresupuesto, montoAsignado, categoria);
     }
 
-    public boolean deposito(int idCuenta, double monto) {
-        return billeteraVirtual.depositar(idCuenta, monto);
-    }
-
-    public boolean transferencia(int idCuentaOrigen, int idCuentaDestino,double monto) {
-        return billeteraVirtual.transferir(idCuentaOrigen,idCuentaDestino,monto);
-    }
-
-    public boolean retiro(int idCuenta, double monto) {
-        return billeteraVirtual.retirar(idCuenta,monto);
-    }
-
+    @Override
     public List<Transaccion> obtenerTransacciones() {
         return billeteraVirtual.obtenerTransaccionesDelUsuario();
     }
 
+    @Override
     public boolean agregarTransaccion(Transaccion transaccion) {
         return billeteraVirtual.agregarTransaccion(transaccion);
     }
 
+    @Override
     public boolean actualizarPerfilUsuario(String nombre, String correo, String numeroTelefono) {
         return billeteraVirtual.actualizarPerfilUsuario(nombre,correo,numeroTelefono);
     }
 
+    @Override
     public List<Cuenta> obtenerCuentasAdmin() {
         return billeteraVirtual.getListaCuentas();
     }
 
+    @Override
     public List<Transaccion> obtenerTransaccionesAdmin() {
         return billeteraVirtual.getListatransacciones();
+    }
+
+    @Override
+    public List<Usuario> obtenerUsuarios() {
+        return billeteraVirtual.getListaUsuarios();
+    }
+
+    @Override
+    public boolean eliminarUsuario(String idUsuario) {
+        return billeteraVirtual.eliminarUsuario(idUsuario);
+    }
+
+    @Override
+    public boolean actualizarUsuario(String nombre, String cedula, String correo, String telefono, String direccion, String clave) {
+        return billeteraVirtual.actualizarUsuario(nombre,cedula,correo,telefono,direccion,clave);
+    }
+
+    @Override
+    public List<Transaccion> obtenerAdminTransacciones() {
+        return billeteraVirtual.getListatransacciones();
+    }
+
+    @Override
+    public List<Presupuesto> obtenerPresupuestosAdmin() {
+        return billeteraVirtual.getListaPresupuestos();
+    }
+
+    public BilleteraVirtual getBilleteraVirtual() {
+        return billeteraVirtual;
     }
 }
 
