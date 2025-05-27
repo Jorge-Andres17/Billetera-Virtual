@@ -137,4 +137,21 @@ public class BilleteraVirtualConstantes {
 
     public static final String TITULO_USUARIO_NO_ACTUALIZADO = "Usuario no actualizado";
     public static final String BODY_USUARIO_NO_ACTUALIZADO = "Error al actualizar usuario";
+
+    public static final String TITULO_ADMIN = "Administrador con sesion activa";
+    public static final String BODY_ADMIN = "El Administrador se encuentra Logueado";
+
+    public static final String TITULO_USUARIO = "Usuario con sesion activa";
+    public static final String BODY_USUARIO = "El Usuario se encuentra Logueado";
+
+    public static final String ERROR_AUTENTICACION_TITULO = "Error de autenticación";
+    public static final String ERROR_AUTENTICACION_MENSAJE = "Correo o contraseña incorrectos.\nNo estás registrado en el sistema.";
+
+    public static final String ERROR_REPORTE = "Error generando el reporte: ";
+
+    public static final String COMPLETAR_CAMPOS = "Por favor completa todos los campos.";
+
+    public static final String ERROR_FORMATO = "Formato no soportado.";
+
+    public static final String ASOCIADA = "Ya tiene una cuenta Asociada";
 }

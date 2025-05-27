@@ -4,7 +4,6 @@ import co.edu.uniquindio.billeteravirtual.billeteravirtual.Factory.ModelFactory;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Cuenta;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Transaccion;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Usuario;
-
 import java.util.List;
 
 public class TransaccionAdminController {

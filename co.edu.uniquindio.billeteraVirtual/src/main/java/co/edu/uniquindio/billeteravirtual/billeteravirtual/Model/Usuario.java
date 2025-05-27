@@ -1,5 +1,8 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Model;
 
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Decorator.IPresupuesto;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Factory.ModelFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +15,7 @@ public class Usuario {
     private String clave;
 
     private List<Cuenta> listaCuentasAsociadas = new ArrayList<Cuenta>();
-    private List<Presupuesto> listaPresupuestos = new ArrayList<Presupuesto>();
+    private List<IPresupuesto> listaPresupuestos = new ArrayList<IPresupuesto>();
     BilleteraVirtual owedBilleteraVirtual;
 
     public Usuario(){}
@@ -87,11 +90,11 @@ public class Usuario {
         this.listaCuentasAsociadas = listaCuentasAsociadas;
     }
 
-    public List<Presupuesto> getListaPresupuestos() {
+    public List<IPresupuesto> getListaPresupuestos() {
         return listaPresupuestos;
     }
 
-    public void setListaPresupuestos(List<Presupuesto> listaPresupuestos) {
+    public void setListaPresupuestos(List<IPresupuesto> listaPresupuestos) {
         this.listaPresupuestos = listaPresupuestos;
     }
 

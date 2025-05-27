@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController.DetalleCuentaViewController"
+      spacing="10" alignment="CENTER"  prefWidth="300" prefHeight="300">
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+
+    <Label fx:id="lblDetalleCUenta" text="Detalle de Cuenta" style="-fx-font-weight: bold; -fx-font-size: 18px;" />
+
+    <Label fx:id="lblNombreBanco" text="Banco:" style="-fx-font-size: 16px;" />
+    <Label fx:id="lblNumeroCuenta" text="Número de cuenta:" style="-fx-font-size: 16px;" />
+    <Label fx:id="lblTipo" text="Tipo de cuenta:" style="-fx-font-size: 16px;"/>
+    <Label fx:id="lblSaldo" text="Saldo:" style="-fx-font-size: 16px;"/>
+
+    <Button fx:id="cerrarButton" text="Cerrar" onAction="#cerrarVentana"/>
+</VBox>

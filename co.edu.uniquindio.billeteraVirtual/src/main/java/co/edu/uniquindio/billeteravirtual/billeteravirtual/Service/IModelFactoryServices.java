@@ -1,11 +1,14 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Service;
 
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Decorator.IPresupuesto;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Login.Autenticador;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Mapping.dto.CategoriaDto;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.*;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Enums.TipoCuenta;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Proxy.ProxyAutenticador;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IModelFactoryServices {
 
@@ -13,16 +16,16 @@ public interface IModelFactoryServices {
 
     boolean autenticarAdministrador(String correo, String clave);
 
-    Autenticador getAutenticador();
+    ProxyAutenticador getAutenticador();
 
     boolean agregarCuenta(Cuenta cuenta);
 
     List<Cuenta> obtenerCuentas();
 
-    boolean eliminarCuenta(int id,String numeroCuenta);
+    boolean eliminarCuenta(int id, String numeroCuenta);
 
     boolean actualizarCuenta(int idCuenta, String nombreBanco, String numeroCuenta,
-                             TipoCuenta tipoCuenta,Presupuesto presupuesto);
+                             TipoCuenta tipoCuenta, IPresupuesto presupuesto);
 
     List<CategoriaDto> obtenerCategorias();
 
@@ -30,15 +33,15 @@ public interface IModelFactoryServices {
 
     boolean eliminarCategoria(String nombre);
 
-    boolean actualizarCategoria( String nombre, String descripcion);
+    boolean actualizarCategoria(String nombre, String descripcion);
 
-    CategoriaDto actualizarCategoriaDto( String nombre, String descripcion);
+    CategoriaDto actualizarCategoriaDto(String nombre, String descripcion);
 
     boolean agregarUsuario(Usuario usuario);
 
-    boolean agregarPresupuesto(Presupuesto presupuesto);
+    boolean agregarPresupuesto(IPresupuesto presupuesto);
 
-    List<Presupuesto> obtenerPresupuestos();
+    List<IPresupuesto> obtenerPresupuestos();
 
     List<Categoria> obtenerPresupuestoCategorias();
 
@@ -52,7 +55,8 @@ public interface IModelFactoryServices {
 
     boolean agregarTransaccion(Transaccion transaccion);
 
-    boolean actualizarPerfilUsuario(String nombre, String correo, String numeroTelefono);
+    boolean actualizarPerfilUsuario(String cedula, String nombre, String correo,
+                                    String numeroTelefono, String direccion, String clave);
 
     List<Cuenta> obtenerCuentasAdmin();
 
@@ -71,5 +75,5 @@ public interface IModelFactoryServices {
 
     List<Transaccion> obtenerAdminTransacciones();
 
-    List<Presupuesto> obtenerPresupuestosAdmin();
+    List<IPresupuesto> obtenerPresupuestosAdmin();
 }

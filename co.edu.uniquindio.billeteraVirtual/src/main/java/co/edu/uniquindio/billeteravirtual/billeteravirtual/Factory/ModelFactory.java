@@ -1,21 +1,25 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Factory;
 
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Login.Autenticador;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Decorator.IPresupuesto;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Login.Sesion;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Mapping.dto.CategoriaDto;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Mapping.mappers.BilleteraVirtualMappingImpl;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.*;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Enums.TipoCuenta;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Proxy.ProxyAutenticador;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Service.IAutenticar;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Service.IBilleteraVirtualMapping;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Service.IModelFactoryServices;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.DataUtils;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class ModelFactory implements IModelFactoryServices {
     private static ModelFactory modelFactory;
     private BilleteraVirtual billeteraVirtual;
-    private Autenticador autenticador;
+    private IAutenticar autenticador;
     private IBilleteraVirtualMapping mapper;
 
     public static ModelFactory getInstancia() {
@@ -28,8 +32,7 @@ public class ModelFactory implements IModelFactoryServices {
     private ModelFactory() {
         mapper = new BilleteraVirtualMappingImpl();
         billeteraVirtual = DataUtils.inicializarDatos();
-        autenticador = new Autenticador(billeteraVirtual);
-    }
+        autenticador = new ProxyAutenticador(billeteraVirtual);    }
 
     @Override
     public boolean autenticarUsuario(String correo, String clave) {
@@ -42,8 +45,8 @@ public class ModelFactory implements IModelFactoryServices {
     }
 
     @Override
-    public Autenticador getAutenticador() {
-        return autenticador;
+    public ProxyAutenticador getAutenticador() {
+        return (ProxyAutenticador) autenticador;
     }
 
     @Override
@@ -63,13 +66,19 @@ public class ModelFactory implements IModelFactoryServices {
 
     @Override
     public boolean actualizarCuenta(int idCuenta, String nombreBanco, String numeroCuenta, TipoCuenta tipoCuenta,
-                                    Presupuesto presupuesto) {
+                                    IPresupuesto presupuesto) {
         return billeteraVirtual.actualizarCuenta(idCuenta, nombreBanco, numeroCuenta, tipoCuenta,presupuesto);
     }
 
     @Override
     public List<CategoriaDto> obtenerCategorias() {
-        return mapper.getCategoriaDto(billeteraVirtual.getListaCategorias());
+        return mapper.getCategoriaDto(
+                Sesion.getUsuarioActual().getListaPresupuestos().stream()
+                        .map(IPresupuesto::getCategoriaAsociada)
+                        .filter(Objects::nonNull)
+                        .distinct()
+                        .toList()
+        );
     }
 
     @Override
@@ -98,18 +107,22 @@ public class ModelFactory implements IModelFactoryServices {
     }
 
     @Override
-    public boolean agregarPresupuesto(Presupuesto presupuesto) {
+    public boolean agregarPresupuesto(IPresupuesto presupuesto) {
         return billeteraVirtual.agregarPresupuesto(presupuesto);
     }
 
     @Override
-    public List<Presupuesto> obtenerPresupuestos() {
+    public List<IPresupuesto> obtenerPresupuestos() {
         return Sesion.getUsuarioActual().getListaPresupuestos();
     }
 
     @Override
     public List<Categoria> obtenerPresupuestoCategorias() {
-        return billeteraVirtual.getListaCategorias();
+        return Sesion.getUsuarioActual().getListaPresupuestos().stream()
+                .map(IPresupuesto::getCategoriaAsociada)
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
     }
 
     @Override
@@ -140,8 +153,15 @@ public class ModelFactory implements IModelFactoryServices {
     }
 
     @Override
-    public boolean actualizarPerfilUsuario(String nombre, String correo, String numeroTelefono) {
-        return billeteraVirtual.actualizarPerfilUsuario(nombre,correo,numeroTelefono);
+    public boolean actualizarPerfilUsuario(String cedula,
+                                           String nombre,
+                                           String correo,
+                                           String numeroTelefono,
+                                           String direccion,
+                                           String clave) {
+        return billeteraVirtual.actualizarPerfilUsuario(cedula,
+                nombre,correo,numeroTelefono,direccion,
+                clave);
     }
 
     @Override
@@ -175,7 +195,7 @@ public class ModelFactory implements IModelFactoryServices {
     }
 
     @Override
-    public List<Presupuesto> obtenerPresupuestosAdmin() {
+    public List<IPresupuesto> obtenerPresupuestosAdmin() {
         return billeteraVirtual.getListaPresupuestos();
     }
 

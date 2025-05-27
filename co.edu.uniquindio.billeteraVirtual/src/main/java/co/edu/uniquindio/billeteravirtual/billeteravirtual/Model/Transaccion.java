@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public class Transaccion {
     private static int contadorId = 0;
-    private final int idTransaccion;
+    private int idTransaccion;
     private LocalDate fechaTransaccion;
     private double Monto;
     private String descripcion;
@@ -22,13 +22,16 @@ public class Transaccion {
                        Cuenta cuentaOrigen,
                        Cuenta cuentaDestino,
                        TipoTransaccion tipoTransaccion) {
-        this.idTransaccion = ++contadorId;
         this.fechaTransaccion = fechaTransaccion;
         this.Monto = monto;
         this.descripcion = descripcion;
         this.cuentaOrigen = cuentaOrigen;
         this.cuentaDestino = cuentaDestino;
         this.tipoTransaccion = tipoTransaccion;
+    }
+
+    public void asignarId() {
+        this.idTransaccion = ++contadorId;
     }
 
     public int getIdTransaccion() {

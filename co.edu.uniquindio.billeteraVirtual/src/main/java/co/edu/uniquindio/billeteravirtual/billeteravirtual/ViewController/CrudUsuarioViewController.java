@@ -1,6 +1,8 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController;
 
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.BilleteraVirtualApplication;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Controller.CrudUsuarioController;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Login.Sesion;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Usuario;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observer;
 import javafx.beans.property.SimpleStringProperty;
@@ -9,10 +11,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.util.Optional;
 import static co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.BilleteraVirtualConstantes.*;
 
-public class CrudUsuarioViewController implements Observer {
+public class CrudUsuarioViewController {
     CrudUsuarioController crudUsuarioController;
     ObservableList<Usuario> listaUsuarios = FXCollections.observableArrayList();
     Usuario selectedUsuario;
@@ -74,7 +79,6 @@ public class CrudUsuarioViewController implements Observer {
     @FXML
     void initialize() {
         crudUsuarioController = new CrudUsuarioController();
-        crudUsuarioController.getModelFactory().getBilleteraVirtual().addObserver(this);
         initView();
     }
 
@@ -148,6 +152,11 @@ public class CrudUsuarioViewController implements Observer {
     @FXML
     void onActualizar(ActionEvent event) {
         actualizar();
+    }
+
+    @FXML
+    void onCerrarSesion(ActionEvent event) throws IOException {
+        cerrarSesion();
     }
 
     private void agregarUsuario() {
@@ -288,8 +297,10 @@ public class CrudUsuarioViewController implements Observer {
         }
     }
 
-    @Override
-    public void update(Object evento) {
-
+    private void cerrarSesion() throws IOException {
+        Sesion.cerrarSesionAdministrador();
+        Stage stageActual = (Stage) btnCerrarSesion.getScene().getWindow();
+        stageActual.close();
+        BilleteraVirtualApplication.mostrarVentanaLogin();
     }
 }

@@ -11,6 +11,6 @@ public interface IUsuarioServices {
                               String telefono,
                               String direccion,
                               String clave);
-
-    boolean actualizarPerfilUsuario(String nombre, String correo, String numeroTelefono);
+    boolean actualizarPerfilUsuario(String cedula,String nombre, String correo,
+                                    String numeroTelefono, String direccion, String clave);
 }

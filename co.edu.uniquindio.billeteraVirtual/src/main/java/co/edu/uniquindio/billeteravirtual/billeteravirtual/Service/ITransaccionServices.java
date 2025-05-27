@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface ITransaccionServices {
     boolean agregarTransaccion(Transaccion transaccion);
-
     List<Transaccion> obtenerTransaccionesDelUsuario();
 }

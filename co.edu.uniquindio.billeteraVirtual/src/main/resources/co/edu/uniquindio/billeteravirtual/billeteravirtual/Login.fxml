@@ -9,27 +9,27 @@
 
 <AnchorPane prefHeight="482.0" prefWidth="729.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController.LoginViewController">
    <children>
-      <Label layoutX="189.0" layoutY="127.0" text="Correo:">
+      <Label layoutX="202.0" layoutY="168.0" text="Correo:">
          <font>
-            <Font name="System Bold" size="18.0" />
+            <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="151.0" layoutY="186.0" text="Contraseña:">
+      <Label layoutX="164.0" layoutY="227.0" text="Contraseña:">
          <font>
-            <Font name="System Bold" size="18.0" />
+            <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="336.0" layoutY="50.0" text="Login">
+      <Label layoutX="349.0" layoutY="91.0" text="Login">
          <font>
             <Font name="System Bold" size="27.0" />
          </font>
       </Label>
-      <TextField fx:id="TxtCorreo" layoutX="260.0" layoutY="128.0" prefHeight="25.0" prefWidth="280.0" />
-      <Button fx:id="btnIniciarSesion" layoutX="305.0" layoutY="258.0" mnemonicParsing="false" onAction="#onIniciarSesion" text=" Iniciar Sesion" textAlignment="CENTER">
+      <TextField fx:id="TxtCorreo" layoutX="273.0" layoutY="169.0" prefHeight="25.0" prefWidth="280.0" />
+      <Button fx:id="btnIniciarSesion" layoutX="318.0" layoutY="299.0" mnemonicParsing="false" onAction="#onIniciarSesion" text=" Iniciar Sesion" textAlignment="CENTER">
          <font>
-            <Font name="System Bold" size="16.0" />
+            <Font size="16.0" />
          </font>
       </Button>
-      <PasswordField fx:id="TxtContraseña" layoutX="262.0" layoutY="187.0" prefHeight="25.0" prefWidth="280.0" />
+      <PasswordField fx:id="TxtContraseña" layoutX="275.0" layoutY="228.0" prefHeight="25.0" prefWidth="280.0" />
    </children>
 </AnchorPane>

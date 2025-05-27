@@ -1,17 +1,17 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observadores;
 
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Presupuesto;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Decorator.IPresupuesto;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.TipoEvento;
 
 public class EventoPresupuesto extends Evento {
-    private final Presupuesto presupuesto;
+    private final IPresupuesto presupuesto;
 
-    public EventoPresupuesto(TipoEvento tipo, Presupuesto presupuesto) {
+    public EventoPresupuesto(TipoEvento tipo, IPresupuesto presupuesto) {
         super(tipo);
         this.presupuesto = presupuesto;
     }
 
-    public Presupuesto getPresupuesto() {
+    public IPresupuesto getPresupuesto() {
         return presupuesto;
     }
 }

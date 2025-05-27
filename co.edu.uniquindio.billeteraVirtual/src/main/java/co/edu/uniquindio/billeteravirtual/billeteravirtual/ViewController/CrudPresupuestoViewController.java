@@ -1,6 +1,9 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController;
 
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Controller.CrudPresupuestoController;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Decorator.IPresupuesto;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Decorator.PresupuestoFechaLimiteDecorator;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Decorator.TipoPresupuestoDecorator;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Categoria;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Cuenta;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Presupuesto;
@@ -9,6 +12,8 @@ import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observadores
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observadores.EventoCuenta;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observadores.EventoTransaccion;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Observed.Observer;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.State.EstadoActivo;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.State.EstadoInactivo;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -23,11 +28,17 @@ import static co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.Billeter
 
 public class CrudPresupuestoViewController implements Observer {
     CrudPresupuestoController crudPresupuestoController;
-    ObservableList<Presupuesto> listaPresupuestos = FXCollections.observableArrayList();
-    Presupuesto selectedPresupuesto;
+    ObservableList<IPresupuesto> listaPresupuestos = FXCollections.observableArrayList();
+    IPresupuesto selectedPresupuesto;
 
     @FXML
     private Button btnActualizar;
+
+    @FXML
+    private TableColumn<IPresupuesto, String> tcTipoPresupuesto;
+
+    @FXML
+    private TableColumn<IPresupuesto, String> tcFechaLimite;
 
     @FXML
     private Button btnAgregarPresupuesto;
@@ -39,31 +50,34 @@ public class CrudPresupuestoViewController implements Observer {
     private Button btnNuevo;
 
     @FXML
+    private DatePicker DatePickerFechaLimite;
+
+    @FXML
+    private ComboBox<String> cbTipoPresupuesto;
+
+    @FXML
     private ComboBox<Categoria> cbCategorias;
 
     @FXML
-    private ComboBox<Cuenta> cbCuentasDisponibles;
+    private TableView<IPresupuesto> tablePresupuesto;
 
     @FXML
-    private TableView<Presupuesto> tablePresupuesto;
+    private TableColumn<IPresupuesto, String> tcCategoria;
 
     @FXML
-    private TableColumn<Presupuesto, String> tcCategoria;
+    private TableColumn<IPresupuesto, String> tcCuenta;
 
     @FXML
-    private TableColumn<Presupuesto, String> tcCuenta;
+    private TableColumn<IPresupuesto, String> tcIdPresupuesto;
 
     @FXML
-    private TableColumn<Presupuesto, String> tcIdPresupuesto;
+    private TableColumn<IPresupuesto, String> tcMontoAsignado;
 
     @FXML
-    private TableColumn<Presupuesto, String> tcMontoAsignado;
+    private TableColumn<IPresupuesto, String> tcMontoGastado;
 
     @FXML
-    private TableColumn<Presupuesto, String> tcMontoGastado;
-
-    @FXML
-    private TableColumn<Presupuesto, String> tcNombre;
+    private TableColumn<IPresupuesto, String> tcNombre;
 
     @FXML
     private TextField txtMontoAsignado;
@@ -91,6 +105,8 @@ public class CrudPresupuestoViewController implements Observer {
             }
         });
         cbCategorias.setPromptText("Selecciona una categoria");
+        cbTipoPresupuesto.setItems(FXCollections.observableArrayList("Mensual", "Anual", "Temporal", "Otro"));
+        cbTipoPresupuesto.setPromptText("Selecciona tipo");
         initView();
     }
 
@@ -124,6 +140,23 @@ public class CrudPresupuestoViewController implements Observer {
         tcMontoGastado.setCellValueFactory
                 (cellData -> new SimpleStringProperty
                         (String.valueOf(cellData.getValue().getMontoGastado())));
+        tcTipoPresupuesto.setCellValueFactory(cellData -> {
+            IPresupuesto presupuesto = cellData.getValue();
+            TipoPresupuestoDecorator tipoDecorator = buscarDecorador(presupuesto, TipoPresupuestoDecorator.class);
+            if (tipoDecorator != null) {
+                return new SimpleStringProperty(tipoDecorator.getTipoPresupuesto());
+            }
+            return new SimpleStringProperty("No definido");
+        });
+
+        tcFechaLimite.setCellValueFactory(cellData -> {
+            IPresupuesto presupuesto = cellData.getValue();
+            PresupuestoFechaLimiteDecorator fechaDecorator = buscarDecorador(presupuesto, PresupuestoFechaLimiteDecorator.class);
+            if (fechaDecorator != null) {
+                return new SimpleStringProperty(fechaDecorator.getFechaLimite().toString());
+            }
+            return new SimpleStringProperty("Sin fecha");
+        });
     }
 
     private void obtenerPresupuestos() {
@@ -137,11 +170,25 @@ public class CrudPresupuestoViewController implements Observer {
         });
     }
 
-    private void mostrarInformacionPresupuesto(Presupuesto selectedPresupuesto) {
-        if(selectedPresupuesto != null){
+    private void mostrarInformacionPresupuesto(IPresupuesto selectedPresupuesto) {
+        if (selectedPresupuesto != null) {
             txtNombrePresupuesto.setText(selectedPresupuesto.getNombrePresupuesto());
             txtMontoAsignado.setText(String.valueOf(selectedPresupuesto.getMontoAsignado()));
             cbCategorias.setValue(selectedPresupuesto.getCategoriaAsociada());
+
+            TipoPresupuestoDecorator tipo = buscarDecorador(selectedPresupuesto, TipoPresupuestoDecorator.class);
+            if (tipo != null) {
+                cbTipoPresupuesto.setValue(tipo.getTipoPresupuesto());
+            } else {
+                cbTipoPresupuesto.setValue(null);
+            }
+
+            PresupuestoFechaLimiteDecorator fechaLimite = buscarDecorador(selectedPresupuesto, PresupuestoFechaLimiteDecorator.class);
+            if (fechaLimite != null) {
+                DatePickerFechaLimite.setValue(fechaLimite.getFechaLimite());
+            } else {
+                DatePickerFechaLimite.setValue(null);
+            }
         }
     }
 
@@ -170,7 +217,7 @@ public class CrudPresupuestoViewController implements Observer {
     }
 
     private void agregarPresupuesto() {
-        Presupuesto presupuesto = crearPresupuesto();
+        IPresupuesto presupuesto = crearPresupuestoDecorado();
         if (datosValidos(presupuesto)) {
             if (crudPresupuestoController.agregarPresupuesto(presupuesto)) {
                 listaPresupuestos.add(presupuesto);
@@ -193,15 +240,26 @@ public class CrudPresupuestoViewController implements Observer {
         }
     }
 
-    private Presupuesto crearPresupuesto() {
-        return new Presupuesto(txtNombrePresupuesto.getText(),
+    private IPresupuesto crearPresupuestoDecorado() {
+        IPresupuesto base = new Presupuesto(
+                txtNombrePresupuesto.getText(),
                 Double.parseDouble(txtMontoAsignado.getText()),
                 0,
                 null,
-                cbCategorias.getValue());
+                cbCategorias.getValue()
+        );
+
+        if (DatePickerFechaLimite.getValue() != null) {
+            base = new PresupuestoFechaLimiteDecorator(base, DatePickerFechaLimite.getValue());
+        }
+        if (cbTipoPresupuesto.getValue() != null && !cbTipoPresupuesto.getValue().isBlank()) {
+            base = new TipoPresupuestoDecorator(base, cbTipoPresupuesto.getValue());
+        }
+
+        return base;
     }
 
-    private boolean datosValidos(Presupuesto presupuesto) {
+    private boolean datosValidos(IPresupuesto presupuesto) {
         if (txtNombrePresupuesto.getText().isBlank()) {
             return false;
         }
@@ -223,7 +281,7 @@ public class CrudPresupuestoViewController implements Observer {
     }
 
     private void eliminarPresupuesto() {
-        Presupuesto presupuesto = tablePresupuesto.getSelectionModel().getSelectedItem();
+        IPresupuesto presupuesto = tablePresupuesto.getSelectionModel().getSelectedItem();
         if (presupuesto != null) {
             if (mostrarMensajeConfirmacion(MENSAJE_ELIMINAR_CUENTA)) {
                 if (crudPresupuestoController.eliminarPresupuesto(presupuesto.getNombrePresupuesto())) {
@@ -254,14 +312,39 @@ public class CrudPresupuestoViewController implements Observer {
     }
 
     private void actualizar() {
-        Presupuesto presupuesto = tablePresupuesto.getSelectionModel().getSelectedItem();
-        if (presupuesto != null && datosValidos(presupuesto)) {
-            if (crudPresupuestoController.actualizarPresupuesto(txtNombrePresupuesto.getText(),
-                    Double.parseDouble(txtMontoAsignado.getText()),
-                    cbCategorias.getValue())) {
+        IPresupuesto presupuestoSeleccionado = tablePresupuesto.getSelectionModel().getSelectedItem();
+        if (presupuestoSeleccionado != null && datosValidos(presupuestoSeleccionado)) {
+            String nuevoNombre = txtNombrePresupuesto.getText();
+            double nuevoMonto = Double.parseDouble(txtMontoAsignado.getText());
+            Categoria nuevaCategoria = cbCategorias.getValue();
 
-                limpiarCampos();
+            IPresupuesto actualizado = new Presupuesto(
+                    nuevoNombre,
+                    nuevoMonto,
+                    presupuestoSeleccionado.getMontoGastado(),
+                    presupuestoSeleccionado.getCuentaAsociada(),
+                    nuevaCategoria
+            );
+            actualizado.setIdPresupuesto(presupuestoSeleccionado.getIdPresupuesto());
+            actualizado.setEstadoPresupuesto(new EstadoInactivo());
+            if (DatePickerFechaLimite.getValue() != null) {
+                actualizado = new PresupuestoFechaLimiteDecorator(actualizado, DatePickerFechaLimite.getValue());
+            }
+
+            if (cbTipoPresupuesto.getValue() != null && !cbTipoPresupuesto.getValue().isBlank()) {
+                actualizado = new TipoPresupuestoDecorator(actualizado, cbTipoPresupuesto.getValue());
+            }
+
+            if (crudPresupuestoController.actualizarPresupuesto(
+                    nuevoNombre,
+                    nuevoMonto,
+                    nuevaCategoria
+            )) {
+                int index = listaPresupuestos.indexOf(presupuestoSeleccionado);
+                listaPresupuestos.set(index, actualizado);
+                tablePresupuesto.getSelectionModel().clearSelection();
                 tablePresupuesto.refresh();
+                limpiarCampos();
                 mostrarMensaje(TITULO_PRESUPUESTO_ACTUALIZADO,
                         HEADER_PRESUPUESTO_ACTUALIZADO,
                         BODY_PRESUPUESTO_ACTUALIZADO,
@@ -284,6 +367,8 @@ public class CrudPresupuestoViewController implements Observer {
         txtNombrePresupuesto.clear();
         txtMontoAsignado.clear();
         cbCategorias.getSelectionModel().clearSelection();
+        cbTipoPresupuesto.getSelectionModel().clearSelection();
+        DatePickerFechaLimite.setValue(null);
         tablePresupuesto.refresh();
         tablePresupuesto.getSelectionModel().clearSelection();
     }
@@ -312,6 +397,23 @@ public class CrudPresupuestoViewController implements Observer {
         }
     }
 
+    private <T> T buscarDecorador(IPresupuesto presupuesto, Class<T> claseDecorador) {
+        IPresupuesto actual = presupuesto;
+        while (actual != null) {
+            if (claseDecorador.isInstance(actual)) {
+                return claseDecorador.cast(actual);
+            }
+            if (actual instanceof TipoPresupuestoDecorator tipo) {
+                actual = tipo.getDecorado();
+            } else if (actual instanceof PresupuestoFechaLimiteDecorator fecha) {
+                actual = fecha.getDecorado();
+            } else {
+                break;
+            }
+        }
+        return null;
+    }
+
     @Override
     public void update(Object evento) {
         if (evento instanceof EventoCategoria e) {
@@ -336,14 +438,12 @@ public class CrudPresupuestoViewController implements Observer {
                 }
             });
         } else if (evento instanceof EventoCuenta e) {
-            Cuenta cuenta = e.getCuenta();
             Platform.runLater(() -> {
                 switch (e.getTipo()) {
                     case AGREGAR, ELIMINAR, ACTUALIZAR -> tablePresupuesto.refresh();
                 }
             });
         } else if (evento instanceof EventoTransaccion e) {
-            Transaccion transaccion = e.getTransaccion();
             Platform.runLater(() -> {
                 switch (e.getTipo()){
                     case AGREGAR -> tablePresupuesto.refresh();

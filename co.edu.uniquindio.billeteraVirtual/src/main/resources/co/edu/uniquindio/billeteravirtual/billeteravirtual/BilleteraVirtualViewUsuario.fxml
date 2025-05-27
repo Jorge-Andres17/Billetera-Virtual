@@ -64,13 +64,34 @@
             <Tab text="Perfil">
                 <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                        <children>
-                            <SplitPane layoutX="2.0" layoutY="3.0" orientation="VERTICAL" prefHeight="512.0" prefWidth="794.0">
-                                <items>
-                                    <fx:include source="Perfil.fxml" />
-                                </items>
-                            </SplitPane>
-                        </children>
+                     <children>
+                        <TabPane layoutX="3.0" layoutY="4.0" prefHeight="505.0" prefWidth="792.0" tabClosingPolicy="UNAVAILABLE">
+                          <tabs>
+                            <Tab text="Actualizar Perfil">
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="526.0" prefWidth="792.0">
+                                    <children>
+                                        <SplitPane layoutX="4.0" layoutY="2.0" orientation="VERTICAL" prefHeight="470.0" prefWidth="786.0">
+                                            <items>
+                                                <fx:include source="Perfil.fxml" />
+                                            </items>
+                                        </SplitPane>
+                                    </children>
+                                </AnchorPane>
+                            </Tab>
+                            <Tab text="Generar Reportes">
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <SplitPane layoutX="4.0" layoutY="10.0" orientation="VERTICAL" prefHeight="459.0" prefWidth="786.0">
+                                            <items>
+                                                <fx:include source="GenerarReporte.fxml" />
+                                            </items>
+                                        </SplitPane>
+                                    </children>
+                                </AnchorPane>
+                            </Tab>
+                          </tabs>
+                        </TabPane>
+                     </children>
                     </AnchorPane>
                 </content>
             </Tab>

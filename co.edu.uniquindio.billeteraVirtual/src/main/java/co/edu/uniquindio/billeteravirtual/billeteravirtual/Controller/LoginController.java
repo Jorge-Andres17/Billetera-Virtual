@@ -2,6 +2,7 @@ package co.edu.uniquindio.billeteravirtual.billeteravirtual.Controller;
 
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Factory.ModelFactory;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Login.Autenticador;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Service.IAutenticar;
 
 public class LoginController {
     ModelFactory modelFactory;
@@ -15,13 +16,5 @@ public class LoginController {
 
     public boolean autenticarAdminnistrador(String correo, String clave) {
         return modelFactory.autenticarAdministrador(correo,clave);
-    }
-
-    public Autenticador getAutenticador() {
-        return modelFactory.getAutenticador();
-    }
-
-    public Autenticador getAutenticadorAdmin() {
-        return modelFactory.getAutenticador();
     }
 }

@@ -1,9 +1,8 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Service;
 
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Decorator.IPresupuesto;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Cuenta;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Enums.TipoCuenta;
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Presupuesto;
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Usuario;
 
 public interface ICuentaServices {
     boolean agregarCuenta(Cuenta cuenta);
@@ -11,5 +10,5 @@ public interface ICuentaServices {
     boolean actualizarCuenta(int id, String nombreBanco,
                              String numeroCuenta,
                              TipoCuenta tipoCuenta,
-                             Presupuesto presupuesto);
+                             IPresupuesto presupuesto);
 }

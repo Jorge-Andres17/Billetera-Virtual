@@ -1,11 +1,10 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Controller;
 
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Decorator.IPresupuesto;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Factory.ModelFactory;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Cuenta;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Enums.TipoCuenta;
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Presupuesto;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Usuario;
-
 import java.util.List;
 
 public class CrudCuentaAdminController {
@@ -23,7 +22,7 @@ public class CrudCuentaAdminController {
         return modelFactory.obtenerUsuarios();
     }
 
-    public List<Presupuesto> obtenerPresupuestos() {
+    public List<IPresupuesto> obtenerPresupuestos() {
         return modelFactory.obtenerPresupuestosAdmin();
     }
 
@@ -37,7 +36,7 @@ public class CrudCuentaAdminController {
 
     public boolean actualizarCuenta(int idCuenta, String nombreBanco,
                                     String numeroCuenta, TipoCuenta tipoCuenta,
-                                    Presupuesto presupuesto) {
+                                    IPresupuesto presupuesto) {
         return modelFactory.actualizarCuenta(idCuenta,nombreBanco,numeroCuenta,
                 tipoCuenta,presupuesto);
     }

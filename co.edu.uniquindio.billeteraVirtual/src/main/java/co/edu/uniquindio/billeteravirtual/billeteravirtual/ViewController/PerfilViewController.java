@@ -10,6 +10,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import java.io.File;
 import java.io.IOException;
 import static co.edu.uniquindio.billeteravirtual.billeteravirtual.Utils.BilleteraVirtualConstantes.*;
 
@@ -26,7 +28,16 @@ public class PerfilViewController {
     private Button btnEditar;
 
     @FXML
+    private TextField txtCedula;
+
+    @FXML
+    private TextField txtClave;
+
+    @FXML
     private TextField txtCorreo;
+
+    @FXML
+    private TextField txtDireccion;
 
     @FXML
     private TextField txtNombre;
@@ -39,6 +50,9 @@ public class PerfilViewController {
         perfilController = new PerfilController();
         txtNombre.setDisable(true);
         txtCorreo.setDisable(true);
+        txtCedula.setDisable(true);
+        txtClave.setDisable(true);
+        txtDireccion.setDisable(true);
         txtNumeroTelefono.setDisable(true);
         btnAceptar.setDisable(true);
         mostarInfo();
@@ -50,6 +64,9 @@ public class PerfilViewController {
             txtNombre.setText(usuario.getNombre());
             txtCorreo.setText(usuario.getCorreo());
             txtNumeroTelefono.setText(usuario.getNumeroTelefono());
+            txtCedula.setText(usuario.getIdUsuario());
+            txtClave.setText(usuario.getClave());
+            txtDireccion.setText(usuario.getDireccion());
         }
     }
 
@@ -69,17 +86,18 @@ public class PerfilViewController {
     }
 
     private void aceptarActualizacion() {
-        if (datosValidos(txtNombre.getText(),
+        if (datosValidos(txtCedula.getText(),txtNombre.getText(),
                 txtCorreo.getText(),
-                txtNumeroTelefono.getText())) {
-            if (perfilController.actualizarPerfilUsuario(txtNombre.getText(),
+                txtNumeroTelefono.getText(),
+                txtDireccion.getText(),
+                txtClave.getText())) {
+            if (perfilController.actualizarPerfilUsuario(txtCedula.getText(), txtNombre.getText(),
                     txtCorreo.getText(),
-                    txtNumeroTelefono.getText())) {
+                    txtNumeroTelefono.getText(),
+                    txtDireccion.getText(),
+                    txtClave.getText())) {
                 mostrarInfoActualizada();
-                txtNombre.setDisable(true);
-                txtCorreo.setDisable(true);
-                txtNumeroTelefono.setDisable(true);
-                btnAceptar.setDisable(true);
+                bloquearInfo();
                 mostrarMensaje(TITULO_ACTUALIZACION_EXITOSA,
                         HEADER_ACTUALIZACION_EXITOSA,
                         BODY_ACTUALIZACION_EXITOSA,
@@ -98,17 +116,36 @@ public class PerfilViewController {
         }
     }
 
+    private void bloquearInfo() {
+        txtCedula.setDisable(true);
+        txtNombre.setDisable(true);
+        txtCorreo.setDisable(true);
+        txtNumeroTelefono.setDisable(true);
+        txtDireccion.setDisable(true);
+        txtClave.setDisable(true);
+        btnAceptar.setDisable(true);
+    }
+
     private void mostrarInfoActualizada() {
         Usuario usuarioActualizado = Sesion.getUsuarioActual();
         if (usuarioActualizado != null) {
+            txtCedula.setText(usuarioActualizado.getIdUsuario());
             txtNombre.setText(usuarioActualizado.getNombre());
             txtCorreo.setText(usuarioActualizado.getCorreo());
             txtNumeroTelefono.setText(usuarioActualizado.getNumeroTelefono());
+            txtDireccion.setText(usuarioActualizado.getDireccion());
+            txtClave.setText(usuarioActualizado.getClave());
         }
     }
 
-    private boolean datosValidos(String nombre, String correo, String numeroTelefono) {
-        if (nombre.isEmpty() || correo.isEmpty() || numeroTelefono.isEmpty()) {
+    private boolean datosValidos(String cedula,
+                                 String nombre,
+                                 String correo,
+                                 String numeroTelefono,
+                                 String direccion,
+                                 String clave) {
+        if (nombre.isEmpty() || correo.isEmpty() || numeroTelefono.isEmpty()||
+        cedula.isEmpty() || direccion.isEmpty() || clave.isEmpty()) {
             return false;
         }else {
             return true;
@@ -116,9 +153,12 @@ public class PerfilViewController {
     }
 
     private void editarInfo() {
+        txtCedula.setDisable(false);
         txtNombre.setDisable(false);
         txtCorreo.setDisable(false);
         txtNumeroTelefono.setDisable(false);
+        txtDireccion.setDisable(false);
+        txtClave.setDisable(false);
         btnAceptar.setDisable(false);
     }
 

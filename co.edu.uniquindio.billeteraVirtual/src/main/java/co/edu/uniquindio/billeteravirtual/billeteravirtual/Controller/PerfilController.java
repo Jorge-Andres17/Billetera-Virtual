@@ -9,7 +9,12 @@ public class PerfilController {
         modelFactory = ModelFactory.getInstancia();
     }
 
-    public boolean actualizarPerfilUsuario(String nombre, String correo, String numeroTelefono) {
-        return modelFactory.actualizarPerfilUsuario(nombre,correo,numeroTelefono);
+    public boolean actualizarPerfilUsuario(String cedula,
+                                           String nombre,
+                                           String correo,
+                                           String numeroTelefono,
+                                           String direccion,
+                                           String clave) {
+        return modelFactory.actualizarPerfilUsuario(cedula,nombre,correo,numeroTelefono,direccion,clave);
     }
 }

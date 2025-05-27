@@ -1,10 +1,9 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Controller;
 
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Decorator.IPresupuesto;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Factory.ModelFactory;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Cuenta;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Enums.TipoCuenta;
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Presupuesto;
-
 import java.util.List;
 
 public class CrudCuentaController {
@@ -13,6 +12,7 @@ public class CrudCuentaController {
     public CrudCuentaController(){
         modelFactory = ModelFactory.getInstancia();
     }
+
     public boolean agregarCuenta(Cuenta cuenta) {
         return modelFactory.agregarCuenta(cuenta);
     }
@@ -29,7 +29,7 @@ public class CrudCuentaController {
                                     String nombreBanco,
                                     String numeroCuenta,
                                     TipoCuenta tipoCuenta,
-                                    Presupuesto presupuesto) {
+                                    IPresupuesto presupuesto) {
         return modelFactory.actualizarCuenta(idCuenta,nombreBanco,numeroCuenta,tipoCuenta,presupuesto);
     }
 
@@ -37,7 +37,7 @@ public class CrudCuentaController {
         return modelFactory.obtenerCuentasAdmin();
     }
 
-    public List<Presupuesto> obtenerPresupuestosDisponible() {
+    public List<IPresupuesto> obtenerPresupuestosDisponible() {
         return modelFactory.obtenerPresupuestos();
     }
 

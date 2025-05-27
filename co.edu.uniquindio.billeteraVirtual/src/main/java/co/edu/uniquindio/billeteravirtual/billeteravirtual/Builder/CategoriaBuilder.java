@@ -1,4 +1,4 @@
-package co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Builder;
+package co.edu.uniquindio.billeteravirtual.billeteravirtual.Builder;
 
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Categoria;
 
@@ -19,5 +19,4 @@ public class CategoriaBuilder {
     public Categoria build() {
         return new Categoria(nombre,descripcion);
     }
-
 }

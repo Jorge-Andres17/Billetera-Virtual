@@ -1,9 +1,9 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Controller;
 
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Decorator.IPresupuesto;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Factory.ModelFactory;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Categoria;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Cuenta;
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Presupuesto;
 
 import java.util.List;
 
@@ -14,11 +14,11 @@ public class CrudPresupuestoController {
         modelFactory = ModelFactory.getInstancia();
     }
 
-    public boolean agregarPresupuesto(Presupuesto presupuesto) {
+    public boolean agregarPresupuesto(IPresupuesto presupuesto) {
         return modelFactory.agregarPresupuesto(presupuesto);
     }
 
-    public List<Presupuesto> obtenerPresupuestos() {
+    public List<IPresupuesto> obtenerPresupuestos() {
         return modelFactory.obtenerPresupuestos();
     }
 

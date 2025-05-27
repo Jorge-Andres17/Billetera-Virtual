@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="506.0" prefWidth="770.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController.EstadisticasViewController">
+
+    <TabPane layoutX="10" layoutY="8.0" prefHeight="494.0" prefWidth="753.0">
+        <tabs>
+            <Tab text="Gastos más comunes">
+                <content>
+                    <AnchorPane>
+                        <BarChart fx:id="chartGastos" layoutX="6.0" layoutY="14.0" prefHeight="440.0" prefWidth="737.0" title="Categorías de gasto más comunes">
+                            <xAxis>
+                                <CategoryAxis label="Categoría" />
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis label="Número de transacciones" />
+                            </yAxis>
+                        </BarChart>
+                    </AnchorPane>
+                </content>
+            </Tab>
+            <Tab text="Usuarios con más transacciones">
+                <content>
+                    <AnchorPane>
+                        <BarChart fx:id="chartUsuarios" layoutX="4.0" layoutY="10.0" prefHeight="446.0" prefWidth="741.0" title="Usuarios con más transacciones">
+                            <xAxis>
+                                <CategoryAxis label="Usuario" />
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis label="Cantidad de transacciones" />
+                            </yAxis>
+                        </BarChart>
+                    </AnchorPane>
+                </content>
+            </Tab>
+            <Tab text="Saldo promedio por usuario">
+                <content>
+                    <AnchorPane>
+                        <PieChart fx:id="chartSaldoPromedio" layoutX="9.0" layoutY="6.0" prefHeight="451.0" prefWidth="732.0" title="Saldo promedio por usuario" />
+                    </AnchorPane>
+                </content>
+            </Tab>
+        </tabs>
+    </TabPane>
+</AnchorPane>

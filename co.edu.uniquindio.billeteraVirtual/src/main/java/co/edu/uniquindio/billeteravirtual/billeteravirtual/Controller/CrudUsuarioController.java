@@ -2,7 +2,6 @@ package co.edu.uniquindio.billeteravirtual.billeteravirtual.Controller;
 
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Factory.ModelFactory;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Usuario;
-
 import java.util.List;
 
 public class CrudUsuarioController {

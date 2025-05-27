@@ -1,6 +1,8 @@
 module co.edu.uniquindio.billeteravirtual.billeteravirtual {
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.apache.pdfbox;
+    requires java.desktop;
 
 
     opens co.edu.uniquindio.billeteravirtual.billeteravirtual to javafx.fxml;

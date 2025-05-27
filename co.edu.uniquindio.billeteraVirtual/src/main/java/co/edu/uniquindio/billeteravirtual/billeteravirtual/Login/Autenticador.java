@@ -47,5 +47,4 @@ public class Autenticador implements IAutenticar {
         }
         return false;
     }
-
 }

@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -21,53 +22,67 @@
                         <Font name="System Bold" size="25.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtNombrePresupuesto" layoutX="189.0" layoutY="78.0" prefHeight="25.0" prefWidth="219.0" />
-                  <TextField fx:id="txtMontoAsignado" layoutX="189.0" layoutY="116.0" prefHeight="25.0" prefWidth="219.0" />
-                  <Label layoutX="120.0" layoutY="80.0" text="Nombre:">
+                  <TextField fx:id="txtNombrePresupuesto" layoutX="189.0" layoutY="63.0" prefHeight="25.0" prefWidth="219.0" />
+                  <TextField fx:id="txtMontoAsignado" layoutX="189.0" layoutY="101.0" prefHeight="25.0" prefWidth="219.0" />
+                  <Label layoutX="121.0" layoutY="65.0" text="Nombre:">
                      <font>
-                        <Font name="System Bold" size="15.0" />
+                        <Font size="15.0" />
                      </font></Label>
-                  <Label layoutX="59.0" layoutY="118.0" text="Monto Asignado:">
+                  <Label layoutX="63.0" layoutY="103.0" text="Monto Asignado:">
                      <font>
-                        <Font name="System Bold" size="15.0" />
+                        <Font size="15.0" />
                      </font></Label>
-                  <ComboBox fx:id="cbCategorias" layoutX="543.0" layoutY="78.0" prefHeight="25.0" prefWidth="157.0" />
-                  <Label layoutX="443.0" layoutY="80.0" text="Categorias:">
+                  <ComboBox fx:id="cbCategorias" layoutX="550.0" layoutY="63.0" prefHeight="25.0" prefWidth="157.0" />
+                  <Label layoutX="468.0" layoutY="65.0" text="Categorias:">
                      <font>
-                        <Font name="System Bold" size="15.0" />
+                        <Font size="15.0" />
                      </font></Label>
-                  <Button fx:id="btnNuevo" layoutX="243.0" layoutY="170.0" mnemonicParsing="false" onAction="#onNuevo" text="Nuevo">
+                  <Button fx:id="btnNuevo" layoutX="243.0" layoutY="179.0" mnemonicParsing="false" onAction="#onNuevo" text="Nuevo">
                      <font>
-                        <Font name="System Bold" size="15.0" />
+                        <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button fx:id="btnAgregarPresupuesto" layoutX="345.0" layoutY="170.0" mnemonicParsing="false" onAction="#onAgregar" text="Agregar">
+                  <Button fx:id="btnAgregarPresupuesto" layoutX="345.0" layoutY="179.0" mnemonicParsing="false" onAction="#onAgregar" text="Agregar">
                      <font>
-                        <Font name="System Bold" size="15.0" />
+                        <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button fx:id="btnActualizar" layoutX="455.0" layoutY="170.0" mnemonicParsing="false" onAction="#onActualizar" text="Actualizar">
+                  <Button fx:id="btnActualizar" layoutX="455.0" layoutY="179.0" mnemonicParsing="false" onAction="#onActualizar" text="Actualizar">
                      <font>
-                        <Font name="System Bold" size="15.0" />
+                        <Font size="15.0" />
                      </font>
                   </Button>
+                  <DatePicker fx:id="DatePickerFechaLimite" layoutX="189.0" layoutY="137.0" prefHeight="25.0" prefWidth="219.0" />
+                  <Label layoutX="54.0" layoutY="139.0" prefHeight="21.0" prefWidth="132.0" text="Fecha de Vigencia:">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="cbTipoPresupuesto" layoutX="550.0" layoutY="101.0" prefHeight="25.0" prefWidth="157.0" />
+                  <Label layoutX="426.0" layoutY="103.0" text="Tipo Presupuesto:">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
                   <TableView fx:id="tablePresupuesto" layoutX="14.0" layoutY="16.0" prefHeight="174.0" prefWidth="736.0">
                     <columns>
-                      <TableColumn fx:id="tcIdPresupuesto" prefWidth="95.0" text="ID Presupuesto" />
-                      <TableColumn fx:id="tcNombre" prefWidth="118.0" text="Nombre" />
-                        <TableColumn fx:id="tcCuenta" prefWidth="138.0" text="Cuenta" />
-                        <TableColumn fx:id="tcCategoria" prefWidth="125.0" text="Categoria" />
-                        <TableColumn fx:id="tcMontoAsignado" prefWidth="129.0" text="Monto Asignado" />
-                        <TableColumn fx:id="tcMontoGastado" prefWidth="130.0" text="Monto Gastado" />
+                      <TableColumn fx:id="tcIdPresupuesto" prefWidth="70.0" text="ID Presupuesto" />
+                      <TableColumn fx:id="tcNombre" prefWidth="94.0" text="Nombre" />
+                        <TableColumn fx:id="tcCuenta" prefWidth="91.0" text="Cuenta" />
+                        <TableColumn fx:id="tcCategoria" prefWidth="99.0" text="Categoria" />
+                        <TableColumn fx:id="tcMontoAsignado" prefWidth="98.0" text="Monto Asignado" />
+                        <TableColumn fx:id="tcMontoGastado" minWidth="0.0" prefWidth="90.0" text="Monto Gastado" />
+                        <TableColumn fx:id="tcTipoPresupuesto" minWidth="6.0" prefWidth="101.0" text="Tipo de Presupuesto" />
+                        <TableColumn fx:id="tcFechaLimite" prefWidth="92.0" text="Fecha " />
                     </columns>
                   </TableView>
                   <Button fx:id="btnEliminar" layoutX="343.0" layoutY="207.0" mnemonicParsing="false" onAction="#onEliminar" text="Eliminar">
                      <font>
-                        <Font name="System Bold" size="15.0" />
+                        <Font size="15.0" />
                      </font>
                   </Button>
                </children>

@@ -1,6 +1,7 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.ViewController;
 
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Controller.TransaccionAdminController;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Decorator.IPresupuesto;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Cuenta;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Enums.TipoTransaccion;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Presupuesto;
@@ -326,7 +327,7 @@ public class TransaccionAdminViewController implements Observer {
                 || transaccion.getCuentaOrigen() == null) {
             return false;
         }
-        Presupuesto presupuestoOrigen = transaccion.getCuentaOrigen().getPresupuesto();
+        IPresupuesto presupuestoOrigen = transaccion.getCuentaOrigen().getPresupuesto();
         if (presupuestoOrigen == null) {
             return false;
         }

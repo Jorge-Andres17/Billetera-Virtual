@@ -1,7 +1,7 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Model;
 
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Builder.CategoriaBuilder;
-import co.edu.uniquindio.billeteravirtual.billeteravirtual.Service.IPresupuestoServices;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Builder.CategoriaBuilder;
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Decorator.IPresupuesto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +12,8 @@ public class Categoria {
     private String nombre;
     private String descripcion;
 
-    private List<Presupuesto> listaPresupuestos = new ArrayList<Presupuesto>();
+    private List<IPresupuesto> listaPresupuestos = new ArrayList<IPresupuesto>();
     BilleteraVirtual  ownedByBilleteraVirtual;
-
-    public static Categoria crearDesdeDto( String nombre, String descripcion) {
-        Categoria categoria = new Categoria(nombre, descripcion);
-        return categoria;
-    }
 
     public Categoria(String nombre, String descripcion) {
         this.idCategoria = ++contadorId;
@@ -28,7 +23,6 @@ public class Categoria {
 
     public static CategoriaBuilder builder() {
         return new CategoriaBuilder();
-
     }
 
     public int getIdCategoria() {
@@ -51,11 +45,11 @@ public class Categoria {
         this.descripcion = descripcion;
     }
 
-    public List<Presupuesto> getListaPresupuestos() {
+    public List<IPresupuesto> getListaPresupuestos() {
         return listaPresupuestos;
     }
 
-    public void setListaPresupuestos(List<Presupuesto> listaPresupuestos) {
+    public void setListaPresupuestos(List<IPresupuesto> listaPresupuestos) {
         this.listaPresupuestos = listaPresupuestos;
     }
 

@@ -18,19 +18,4 @@ public class BilleteraVirtualViewUsuario {
     @FXML
     void initialize() {}
 
-    private List<Observer> observers = new ArrayList<>();
-
-    public void addObserver(Observer o) {
-        observers.add(o);
-    }
-
-    public void removeObserver(Observer o) {
-        observers.remove(o);
-    }
-
-    protected void notifyObservers(Object evento) {
-        for (Observer o : observers) {
-            o.update(evento);
-        }
-    }
 }

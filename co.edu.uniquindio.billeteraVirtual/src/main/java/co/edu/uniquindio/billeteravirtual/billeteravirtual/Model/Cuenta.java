@@ -1,5 +1,6 @@
 package co.edu.uniquindio.billeteravirtual.billeteravirtual.Model;
 
+import co.edu.uniquindio.billeteravirtual.billeteravirtual.Decorator.IPresupuesto;
 import co.edu.uniquindio.billeteravirtual.billeteravirtual.Model.Enums.TipoCuenta;
 
 import java.util.ArrayList;
@@ -7,13 +8,13 @@ import java.util.List;
 
 public class Cuenta {
     private static int contadorId = 0;
-    private final int idCuenta;
+    private int idCuenta;
     private String nombreBanco;
     private String numeroCuenta;
     private TipoCuenta tipoCuenta;
 
     private Usuario usuarioAsociado;
-    private Presupuesto presupuesto;
+    private IPresupuesto presupuesto;
     private List<Transaccion> listaTransacciones = new ArrayList<Transaccion>();
     BilleteraVirtual ownedByBilleteraVirtual;
 
@@ -21,13 +22,16 @@ public class Cuenta {
                   String numeroCuenta,
                   TipoCuenta tipoCuenta,
                   Usuario usuarioAsociado,
-                  Presupuesto presupuesto) {
-        this.idCuenta = ++contadorId;
+                  IPresupuesto presupuesto) {
         this.nombreBanco = nombreBanco;
         this.numeroCuenta = numeroCuenta;
         this.tipoCuenta = tipoCuenta;
         this.usuarioAsociado = usuarioAsociado;
         this.presupuesto = presupuesto;
+    }
+
+    public void asignarId() {
+        this.idCuenta = ++contadorId;
     }
 
     public int getIdCuenta() {
@@ -66,11 +70,11 @@ public class Cuenta {
         this.usuarioAsociado = usuarioAsociado;
     }
 
-    public Presupuesto getPresupuesto() {
+    public IPresupuesto getPresupuesto() {
         return presupuesto;
     }
 
-    public void setPresupuesto(Presupuesto presupuesto) {
+    public void setPresupuesto(IPresupuesto presupuesto) {
         this.presupuesto = presupuesto;
     }
 
